@@ -1,0 +1,14 @@
+{
+  "directory": [
+    "./src/base",
+    "./src/consumers",
+    "./src/readers"
+  ],
+  "exclude": [
+    "__mock__",
+    "__mocks__",
+    "__test__",
+    ".spec.ts"
+  ],
+  "delete": true
+}

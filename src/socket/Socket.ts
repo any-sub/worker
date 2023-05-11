@@ -3,6 +3,7 @@ import { io, Socket } from "socket.io-client";
 import { Logger } from "@tsed/logger";
 import { SOCKET_URI } from "../config";
 import { SocketHandler } from "./SocketHandler";
+import { WorkParser } from "@any-sub/worker-transport";
 
 @Injectable()
 export class SocketClient {
@@ -33,9 +34,9 @@ export class SocketClient {
       callback(err);
     });
 
-    this.socket.on("work", async (...args) => {
+    this.socket.on("work", async (work) => {
       try {
-        const result = await this.handler.work(args);
+        const result = await this.handler.work(WorkParser.parse(work));
         this.socket.emit("result", result);
       } catch (err) {
         this.logger.error(err);

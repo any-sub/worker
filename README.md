@@ -8,9 +8,13 @@ Worker instance for the [AnySub Server](https://github.com/any-sub/server)
 
 * Node v16+
 * Yarn
+* [Google Cloud CLI](https://cloud.google.com/sdk/docs/install-sdk)
 
 
 ```bash
+# authenticate
+yarn auth
+
 # install dependencies
 yarn
 

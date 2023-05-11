@@ -11,5 +11,9 @@
     "noEmit": false,
     "emitDeclarationOnly": false,
     "inlineSources": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
 }

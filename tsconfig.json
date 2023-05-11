@@ -33,10 +33,6 @@
   "include": [
     "src"
   ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ],
   "linterOptions": {
     "exclude": []
   }

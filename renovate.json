@@ -1,15 +1,29 @@
 {
-  "extends": ["config:base"],
-  "labels": ["dependencies"],
-  "ignoreDeps": ["node-fetch"],
+  "extends": [
+    "config:base",
+    "local>any-sub/renovate-config"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "ignoreDeps": [
+    "node-fetch"
+  ],
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
       "automerge": true
     },
     {
       "groupName": "Ts.ED",
-      "matchPackagePrefixes": ["@tsed/"]
+      "matchPackagePrefixes": [
+        "@tsed/"
+      ]
     }
   ]
 }

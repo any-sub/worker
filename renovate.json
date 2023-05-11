@@ -1,7 +1,7 @@
 {
   "extends": [
     "config:base",
-    "local>any-sub/renovate-config"
+    "github>any-sub/renovate-config"
   ],
   "labels": [
     "dependencies"

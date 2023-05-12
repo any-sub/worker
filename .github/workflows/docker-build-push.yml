@@ -16,13 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          token_format: 'access_token'
-          credentials_json: '${{ secrets.ARTIFACT_REGISTRY_KEY }}'
-      - run: echo "//europe-west1-npm.pkg.dev/personalweb-279207/any-sub/:_authToken=${{ steps.auth.outputs.access_token }}" > ~/.npmrc
       - uses: actions/setup-node@v3
         with:
           node-version: "16"

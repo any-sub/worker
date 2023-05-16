@@ -2,8 +2,8 @@ import { expect } from "@jest/globals";
 import { PlatformTest } from "@tsed/common";
 import { HtmlConsumer } from "./HtmlConsumer";
 import { Chance } from "chance";
-import { ConsumerOptions, LookupMode } from "./Consumer";
 import { HtmlElementPropertyReader } from "./HtmlElementPropertyReader";
+import { LookupMode, Work } from "@any-sub/worker-transport";
 
 const chance = new Chance();
 
@@ -20,17 +20,24 @@ describe("HTMLConsumer", () => {
   beforeEach(PlatformTest.create);
   afterEach(PlatformTest.reset);
 
-  const options = (containerLookup: string = "div#container", childrenLookup?: string) =>
+  const work = (containerLookup: string = "div#container", childrenLookup?: string): Work =>
     ({
-      originURL: new URL(chance.url()),
-      lookup: {
-        container: {
-          mode: LookupMode.CSS,
-          value: containerLookup
-        },
-        ...(childrenLookup && { children: { mode: LookupMode.CSS, value: childrenLookup } })
+      type: "http",
+      id: chance.string(),
+      source: {
+        location: chance.url(),
+        type: "html"
+      },
+      consume: {
+        lookup: {
+          container: {
+            mode: LookupMode.enum.css,
+            value: containerLookup
+          },
+          ...(childrenLookup && { children: { mode: LookupMode.enum.css, value: childrenLookup } })
+        }
       }
-    } as ConsumerOptions);
+    });
 
   it("should create an instance", async () => {
     // When
@@ -45,27 +52,27 @@ describe("HTMLConsumer", () => {
     const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer);
 
     // When - Then
-    expect(() => instance.consume(chance.string(), options())).toThrow();
+    expect(() => instance.consume(chance.string(), work())).toThrow();
   });
 
   it("should throw when using XPATH selector", async () => {
     // Given
     const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer);
-    const consumerOptions = options("div#container");
-    consumerOptions.lookup.container.mode = LookupMode.XPATH;
+    const workOptions = work("div#container");
+    workOptions.consume.lookup!.container.mode = LookupMode.enum.xpath;
 
     // When - Then
-    expect(() => instance.consume(chance.string(), consumerOptions)).toThrow();
+    expect(() => instance.consume(chance.string(), workOptions)).toThrow();
   });
 
   it("should throw when using REGEX selector", async () => {
     // Given
     const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer);
-    const consumerOptions = options("div#container");
-    consumerOptions.lookup.container.mode = LookupMode.REGEX;
+    const workOptions = work("div#container");
+    workOptions.consume.lookup!.container.mode = LookupMode.enum.regex;
 
     // When - Then
-    expect(() => instance.consume(chance.string(), consumerOptions)).toThrow();
+    expect(() => instance.consume(chance.string(), workOptions)).toThrow();
   });
 
   it("should get content from the container by css selector", async () => {
@@ -73,10 +80,10 @@ describe("HTMLConsumer", () => {
     const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer);
 
     // When
-    const result = instance.consume(`<div id="container">Hello</div>`, options());
+    const result = instance.consume(`<div id="container">Hello</div>`, work());
 
     // Then
-    expect(result).toEqual({ data: ["Hello"] });
+    expect(result).toHaveProperty("data", ["Hello"]);
   });
 
   it("should get content from the container children by css selector", async () => {
@@ -86,110 +93,120 @@ describe("HTMLConsumer", () => {
     // When
     const result = instance.consume(
       `<div id="container"><p class="foo">Hey</p><p>Hello</p><p class="foo">There</p></div>`,
-      options("div#container", "p.foo")
+      work("div#container", "p.foo")
     );
 
     // Then
-    expect(result).toEqual({ data: ["Hey", "There"] });
+    expect(result).toHaveProperty("data", ["Hey", "There"]);
   });
 
   it("should get content from all the container's children", async () => {
     // Given
     const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer);
-    const consumerOptions = options("div#container", "p.foo");
-    consumerOptions.lookup.children!.mode = LookupMode.ALL;
+    const workOptions = work("div#container", "p.foo");
+    workOptions.consume.lookup!.children!.mode = LookupMode.enum.all;
 
     // When
     const result = instance.consume(
       `<div id="container"><p class="foo">Hey</p><p>Hello</p><p class="foo">There</p></div>`,
-      consumerOptions
+      workOptions
     );
 
     // Then
-    expect(result).toEqual({ data: ["Hey", "Hello", "There"] });
+    expect(result).toHaveProperty("data", ["Hey", "Hello", "There"]);
   });
 
   it("should only get content from the container when matching reporting expression", async () => {
     // Given
     const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer);
-    const consumerOptions = options("div#container");
-    consumerOptions.reporting = {
-      search: /(?<number>\d+)/i
+    const workOptions = work("div#container");
+    workOptions.report = {
+      title: {
+        match: /(?<number>\d+)/i
+      }
     };
 
     // When
-    const result = instance.consume(`<div id="container">We don't have any.</div>`, consumerOptions);
+    const result = instance.consume(`<div id="container">We don't have any.</div>`, workOptions);
 
     // Then
-    expect(result).toEqual({ data: [] });
+    expect(result).toHaveProperty("data", []);
   });
 
   it("should get content from the container and tokenize result", async () => {
     // Given
     const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer);
-    const consumerOptions = options("div#container");
-    consumerOptions.reporting = {
-      search: /(?<number>\d+)/i,
-      messageTemplate: "Current number: {{number}}"
+    const workOptions = work("div#container");
+    workOptions.report = {
+      title: {
+        match: /(?<number>\d+)/i,
+        template: "Current number: {{number}}"
+      }
     };
 
     // When
-    const result = instance.consume(`<div id="container">We have 32.</div>`, consumerOptions);
+    const result = instance.consume(`<div id="container">We have 32.</div>`, workOptions);
 
     // Then
-    expect(result).toEqual({ data: ["Current number: 32"] });
+    expect(result).toHaveProperty("data", ["Current number: 32"]);
   });
 
   it("should get content from the container's children and apply template", async () => {
     // Given
     const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer);
-    const consumerOptions = options("div#container", "p");
-    consumerOptions.reporting = {
-      search: /(?<number>\d+)/i,
-      messageTemplate: "Current numbers: {{number}}"
+    const workOptions = work("div#container", "p");
+    workOptions.report = {
+      title: {
+        match: /(?<number>\d+)/i,
+        template: "Current numbers: {{number}}"
+      }
     };
 
     // When
-    const result = instance.consume(`<div id="container">We have 32.<p>We also have 24.</p><p>No, we have 15.</p></div>`, consumerOptions);
+    const result = instance.consume(`<div id="container">We have 32.<p>We also have 24.</p><p>No, we have 15.</p></div>`, workOptions);
 
     // Then
-    expect(result).toEqual({ data: ["Current numbers: 24", "Current numbers: 15"] });
+    expect(result).toHaveProperty("data", ["Current numbers: 24", "Current numbers: 15"]);
   });
 
   it("should only get content from the container's children that match the reporting expression and apply template", async () => {
     // Given
     const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer);
-    const consumerOptions = options("div#container", "p");
-    consumerOptions.reporting = {
-      search: /(?<number>\d+)/i,
-      messageTemplate: "Current numbers: {{number}}"
+    const workOptions = work("div#container", "p");
+    workOptions.report = {
+      title: {
+        match: /(?<number>\d+)/i,
+        template: "Current numbers: {{number}}"
+      }
     };
 
     // When
     const result = instance.consume(
       `<div id="container"><p>We don't have any</p><p>We also have 24.</p><p>No, we have 15.</p></div>`,
-      consumerOptions
+      workOptions
     );
 
     // Then
-    expect(result).toEqual({ data: ["Current numbers: 24", "Current numbers: 15"] });
+    expect(result).toHaveProperty("data", ["Current numbers: 24", "Current numbers: 15"]);
   });
 
   it("should get content from the container's children and apply template with element properties", async () => {
     // Given
-    const consumerOptions = options("div#container", "a");
-    consumerOptions.reporting = {
-      search: /(?<number>\d+)/i,
-      messageTemplate: "Current numbers: {{number}} {{link}}"
+    const workOptions = work("div#container", "a");
+    workOptions.report = {
+      title: {
+        match: /(?<number>\d+)/i,
+        template: "Current numbers: {{number}} {{link}}"
+      }
     };
-    const url = consumerOptions.originURL.origin;
+    const url = workOptions.source.location;
     const deps = mockedDependencies({ link: `${url}/foo` });
     const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer, deps);
 
     // When
-    const result = instance.consume(`<div id="container">We have 32.<a href="/foo">We also have 24.</a></div>`, consumerOptions);
+    const result = instance.consume(`<div id="container">We have 32.<a href="/foo">We also have 24.</a></div>`, workOptions);
 
     // Then
-    expect(result).toEqual({ data: [`Current numbers: 24 ${url}/foo`] });
+    expect(result).toHaveProperty("data", [`Current numbers: 24 ${url}/foo`]);
   });
 });

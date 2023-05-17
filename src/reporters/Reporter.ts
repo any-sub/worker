@@ -7,7 +7,7 @@ export abstract class Reporter {
   public abstract buildReport(content: unknown, report?: Report): ResultReport[];
 
   public reportText(templateString: string, properties: Record<string, unknown>) {
-    const template = Handlebars.compile(templateString);
+    const template = Handlebars.compile(templateString, { noEscape: true });
     return template(properties);
   }
 }

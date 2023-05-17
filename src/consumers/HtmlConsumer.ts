@@ -2,13 +2,14 @@ import { Consumer } from "./Consumer";
 import { HtmlSource } from "../readers";
 import { Inject, Injectable } from "@tsed/di";
 import { JSDOM } from "jsdom";
-import Handlebars from "handlebars";
 import { HtmlElementPropertyReader } from "./HtmlElementPropertyReader";
-import { Consume, LookupMode, LookupSettings, Report, State, Work } from "@any-sub/worker-transport";
+import { Consume, LookupMode, LookupSettings, Report, State, TextReporting, Work } from "@any-sub/worker-transport";
+import { Reporter } from "../reporters/Reporter";
 
 @Injectable()
 export class HtmlConsumer extends Consumer<HtmlSource> {
   @Inject() propertyReader: HtmlElementPropertyReader;
+  @Inject() reporter: Reporter;
 
   private static readonly BODY_LOOKUP: LookupSettings = { mode: "css", value: "body" };
 
@@ -28,27 +29,24 @@ export class HtmlConsumer extends Consumer<HtmlSource> {
     if (options) {
       // TODO
       const { title } = options ?? {};
-      const messageTemplate = title?.template ?? ``;
-      const search = title?.match ?? /.+/;
 
-      if (!messageTemplate) {
-        return elements.map((el) => el.textContent).filter((t) => t && search.test(t)) as string[];
+      if (!title?.template) {
+        return elements.map((el) => el.textContent).filter((t) => t && (title?.match ?? /.*/).test(t)) as string[];
       }
 
-      const template = Handlebars.compile(messageTemplate);
-      return this.buildReportingWithTemplate(elements, search, template);
+      return this.buildReportingWithTemplate(elements, title);
     }
 
     return elements.map((el) => el.textContent).filter(Boolean) as string[];
   }
 
-  private buildReportingWithTemplate(elements: Element[], search: RegExp, template: Handlebars.TemplateDelegate) {
+  private buildReportingWithTemplate(elements: Element[], title: TextReporting) {
     const content: string[] = [];
 
     for (const element of elements) {
-      const groups = element.textContent?.match(search)?.groups;
+      const groups = element.textContent?.match(title.match ?? /.*/)?.groups;
       if (groups) {
-        content.push(template({ ...this.propertyReader.read(element), ...groups }));
+        content.push(this.reporter.reportText(title.template ?? "", { ...this.propertyReader.read(element), ...groups }));
       }
     }
 

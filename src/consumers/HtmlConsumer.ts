@@ -2,13 +2,13 @@ import { Consumer } from "./Consumer";
 import { HtmlSource } from "../readers";
 import { Inject, Injectable } from "@tsed/di";
 import { JSDOM } from "jsdom";
-import { HtmlElementPropertyReader } from "./HtmlElementPropertyReader";
-import { Consume, LookupMode, LookupSettings, Report, State, TextReporting, Work } from "@any-sub/worker-transport";
+import { Consume, ConsumeReportParts, LookupMode, LookupSettings, Report, State, Work } from "@any-sub/worker-transport";
+import { ReportUnit } from "../reporters/HtmlReporter";
+import { ResultReport } from "../model/Report";
 import { Reporter } from "../reporters/Reporter";
 
 @Injectable()
 export class HtmlConsumer extends Consumer<HtmlSource> {
-  @Inject() propertyReader: HtmlElementPropertyReader;
   @Inject() reporter: Reporter;
 
   private static readonly BODY_LOOKUP: LookupSettings = { mode: "css", value: "body" };
@@ -22,35 +22,33 @@ export class HtmlConsumer extends Consumer<HtmlSource> {
     }
 
     const elements = this.getContentArray(consume, container);
-    return { data: this.buildReporting(elements, report), lastUpdated: new Date() };
+    return { data: this.buildReporting(elements, consume.parts, report) as any, lastUpdated: new Date() };
   }
 
-  private buildReporting(elements: Element[], options?: Report): string[] {
-    if (options) {
-      // TODO
-      const { title } = options ?? {};
+  private buildReporting(elements: Element[], parts?: ConsumeReportParts, options?: Report): ResultReport[] {
+    const units = elements.map((element) => {
+      const unit: ReportUnit = { element };
 
-      if (!title?.template) {
-        return elements.map((el) => el.textContent).filter((t) => t && (title?.match ?? /.*/).test(t)) as string[];
+      if (parts?.title) {
+        unit.title = this.lookup(element, parts.title) || undefined;
       }
 
-      return this.buildReportingWithTemplate(elements, title);
-    }
-
-    return elements.map((el) => el.textContent).filter(Boolean) as string[];
-  }
-
-  private buildReportingWithTemplate(elements: Element[], title: TextReporting) {
-    const content: string[] = [];
-
-    for (const element of elements) {
-      const groups = element.textContent?.match(title.match ?? /.*/)?.groups;
-      if (groups) {
-        content.push(this.reporter.reportText(title.template ?? "", { ...this.propertyReader.read(element), ...groups }));
+      if (parts?.description) {
+        unit.description = this.lookup(element, parts.description) || undefined;
       }
-    }
 
-    return content;
+      if (parts?.image) {
+        unit.image = this.lookup(element, parts.image) || undefined;
+      }
+
+      if (parts?.url) {
+        unit.url = this.lookup(element, parts.url) || undefined;
+      }
+
+      return unit;
+    });
+
+    return this.reporter.buildReport(units, options);
   }
 
   private getContentArray(options: Consume, container: Element): Element[] {
@@ -82,11 +80,7 @@ export class HtmlConsumer extends Consumer<HtmlSource> {
 
   protected lookup(element: Element | Document, options: LookupSettings): Element | null;
   protected lookup(element: Element | Document, options: LookupSettings, multiple: boolean): NodeListOf<Element>;
-  protected lookup(
-    element: Element | Document,
-    { mode, value }: LookupSettings,
-    multiple: boolean = false
-  ): Element | NodeList | null {
+  protected lookup(element: Element | Document, { mode, value }: LookupSettings, multiple: boolean = false): Element | NodeList | null {
     if (multiple && mode === LookupMode.enum.all) {
       return element.childNodes;
     }

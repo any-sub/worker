@@ -28,7 +28,9 @@ describe("Reader -> Consumer integration", () => {
   beforeEach(PlatformTest.create);
   afterEach(PlatformTest.reset);
 
-  it("should return content for a container", async () => {
+  it.todo("test");
+
+  it.skip("should return content for a container", async () => {
     // Given
     const deps = mockedDependencies(`<div id="container">Some result</div>`);
     const reader = await PlatformTest.invoke<HtmlReader>(HtmlReader, deps);

@@ -28,6 +28,6 @@ describe("Reader -> Consumer integration", () => {
     });
 
     // Then
-    expect(result).toHaveProperty("data", [{ description: "Some result" }]);
+    expect(result).toEqual([{ description: "Some result" }]);
   });
 });

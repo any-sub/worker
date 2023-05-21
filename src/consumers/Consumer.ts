@@ -1,6 +1,7 @@
 import { HttpSource } from "../readers";
-import { State, Work } from "@any-sub/worker-transport";
+import { Work } from "@any-sub/worker-transport";
+import { ResultReport } from "../model/Report";
 
 export abstract class Consumer<T extends HttpSource> {
-  public abstract consume(source: T, work: Work): State;
+  public abstract consume(source: T, work: Work): ResultReport[];
 }

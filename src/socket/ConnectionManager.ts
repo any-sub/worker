@@ -1,4 +1,4 @@
-import { Inject, Injectable, ProviderScope, Scope } from "@tsed/di";
+import { Injectable, ProviderScope, Scope } from "@tsed/di";
 import { Logger } from "@tsed/logger";
 import { SocketClient } from "./Socket";
 import { delay } from "../base";
@@ -6,8 +6,7 @@ import { delay } from "../base";
 @Injectable()
 @Scope(ProviderScope.SINGLETON)
 export class ConnectionManager {
-  @Inject() logger: Logger;
-  @Inject() client: SocketClient;
+  constructor(private readonly logger: Logger, private readonly client: SocketClient) {}
 
   private static RETRY_WAIT = 1000 * 2;
   private static MAX_RETRIES = 30;

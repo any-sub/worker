@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@tsed/di";
+import { Injectable } from "@tsed/di";
 import { io, Socket } from "socket.io-client";
 import { Logger } from "@tsed/logger";
 import { SOCKET_URI } from "../config";
@@ -7,8 +7,7 @@ import { WorkParser } from "@any-sub/worker-transport";
 
 @Injectable()
 export class SocketClient {
-  @Inject() logger: Logger;
-  @Inject() handler: SocketHandler;
+  constructor(private readonly logger: Logger, private readonly handler: SocketHandler) {}
 
   private socket: Socket;
 

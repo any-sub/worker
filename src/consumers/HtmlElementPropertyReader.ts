@@ -5,6 +5,18 @@ export class HtmlElementPropertyReader {
   public read(element: Element): Record<string, string> {
     const properties: Record<string, string> = {};
 
+    for (const attrName of element.getAttributeNames()) {
+      const value = element.getAttribute(attrName);
+      if (value) {
+        properties[attrName] = value;
+      }
+    }
+
+    const textContent = element.textContent;
+    if (textContent) {
+      properties.textContent = textContent;
+    }
+
     if (this.isAnchor(element)) {
       properties.link = element.href;
     }

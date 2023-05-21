@@ -4,7 +4,7 @@ import { Work } from "@any-sub/worker-transport";
 
 @Injectable()
 export class SocketHandler {
-  @Inject() logger: Logger;
+  constructor(private readonly logger: Logger) {}
 
   public async work(work: Work) {
     return [`pong`, work];

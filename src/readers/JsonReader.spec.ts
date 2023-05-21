@@ -1,34 +1,15 @@
 import { expect } from "@jest/globals";
-import { PlatformTest } from "@tsed/common";
 import { JsonReader } from "./JsonReader";
-import { HttpFetch } from "../base";
+import { mockedHttpFetch } from "../__tests__/utils/Mocks";
 
-const mockedDependencies = (content = "", code = 200, header: string = "application/json") => [
-  {
-    token: HttpFetch,
-    use: {
-      fetch: (_url: string) => {
-        return new Promise((resolve) => {
-          resolve({
-            ok: code < 400,
-            headers: {
-              get: () => header
-            },
-            text: () => new Promise((resolve) => resolve(content))
-          });
-        });
-      }
-    }
-  }
-];
+const mockedJsonHttpFetch = (content = "{}", status = 200) => {
+  return mockedHttpFetch(content, status, "application/json");
+};
 
 describe("JsonReader", () => {
-  beforeEach(PlatformTest.create);
-  afterEach(PlatformTest.reset);
-
   it("should create an instance", async () => {
     // When
-    const instance = await PlatformTest.invoke<JsonReader>(JsonReader);
+    const instance = new JsonReader(mockedJsonHttpFetch());
 
     // Then
     expect(instance).toBeInstanceOf(JsonReader);
@@ -36,8 +17,7 @@ describe("JsonReader", () => {
 
   it("should accept an HTTP URL as a parameter", async () => {
     // Given
-    const deps = mockedDependencies();
-    const instance = await PlatformTest.invoke<JsonReader>(JsonReader, deps);
+    const instance = new JsonReader(mockedJsonHttpFetch());
 
     // When - Then
     await instance.read("https://local.host");
@@ -45,7 +25,7 @@ describe("JsonReader", () => {
 
   it("should not accept an string that is not a URL as a parameter", async () => {
     // Given
-    const instance = await PlatformTest.invoke<JsonReader>(JsonReader);
+    const instance = new JsonReader(mockedJsonHttpFetch());
 
     // When - Then
     await expect(instance.read("foo")).rejects.toThrow();
@@ -54,8 +34,7 @@ describe("JsonReader", () => {
   it("should return the JSON contents of the provided URL", async () => {
     // Given
     const expectedJSON = `{"a": "b"}`;
-    const deps = mockedDependencies(expectedJSON);
-    const instance = await PlatformTest.invoke<JsonReader>(JsonReader, deps);
+    const instance = new JsonReader(mockedJsonHttpFetch(expectedJSON, 200));
 
     // When
     const json = await instance.read("https://local.host");
@@ -67,8 +46,7 @@ describe("JsonReader", () => {
   it("should throw if result not successful", async () => {
     // Given
     const expectedJSON = `{"error": "404"}`;
-    const deps = mockedDependencies(expectedJSON, 404);
-    const instance = await PlatformTest.invoke<JsonReader>(JsonReader, deps);
+    const instance = new JsonReader(mockedJsonHttpFetch(expectedJSON, 404));
 
     // When - Then
     await expect(instance.read("https://local.host")).rejects.toThrow(new Error(expectedJSON));
@@ -76,8 +54,7 @@ describe("JsonReader", () => {
 
   it("should throw if returned content type is not json", async () => {
     // Given
-    const deps = mockedDependencies("", 200, "application/pdf");
-    const instance = await PlatformTest.invoke<JsonReader>(JsonReader, deps);
+    const instance = new JsonReader(mockedHttpFetch("", 200, "application/pdf"));
 
     // When - Then
     await expect(instance.read("https://local.host")).rejects.toThrow();
@@ -86,8 +63,7 @@ describe("JsonReader", () => {
   it("should return the JSON contents when the returned content type is suffixed", async () => {
     // Given
     const expectedJSON = `{"a": "b"}`;
-    const deps = mockedDependencies(expectedJSON, 301, "application/json+someSuffix");
-    const instance = await PlatformTest.invoke<JsonReader>(JsonReader, deps);
+    const instance = new JsonReader(mockedHttpFetch(expectedJSON, 301, "application/json+someSuffix"));
 
     // When
     const json = await instance.read("https://local.host");

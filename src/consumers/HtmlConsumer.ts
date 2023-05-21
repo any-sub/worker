@@ -1,18 +1,20 @@
 import { Consumer } from "./Consumer";
 import { HtmlSource } from "../readers";
-import { Inject, Injectable } from "@tsed/di";
+import { Injectable } from "@tsed/di";
 import { JSDOM } from "jsdom";
-import Handlebars from "handlebars";
-import { HtmlElementPropertyReader } from "./HtmlElementPropertyReader";
-import { Consume, LookupMode, LookupSettings, Report, State, Work } from "@any-sub/worker-transport";
+import { Consume, ConsumeReportParts, LookupMode, LookupSettings, Report, Work } from "@any-sub/worker-transport";
+import { HtmlReporter, ReportUnit } from "../reporters/HtmlReporter";
+import { ResultReport } from "../model/Report";
 
 @Injectable()
 export class HtmlConsumer extends Consumer<HtmlSource> {
-  @Inject() propertyReader: HtmlElementPropertyReader;
-
   private static readonly BODY_LOOKUP: LookupSettings = { mode: "css", value: "body" };
 
-  public consume(source: HtmlSource, { source: { location }, consume, report }: Work): State {
+  constructor(private readonly reporter: HtmlReporter) {
+    super();
+  }
+
+  public consume(source: HtmlSource, { source: { location }, consume, report }: Work): ResultReport[] {
     const dom = this.convert(source, location);
     const container = consume.lookup ? this.getContainer(dom, consume.lookup.container) : this.getContainer(dom, HtmlConsumer.BODY_LOOKUP);
 
@@ -21,38 +23,33 @@ export class HtmlConsumer extends Consumer<HtmlSource> {
     }
 
     const elements = this.getContentArray(consume, container);
-    return { data: this.buildReporting(elements, report), lastUpdated: new Date() };
+    return this.buildReporting(elements, consume.parts, report);
   }
 
-  private buildReporting(elements: Element[], options?: Report): string[] {
-    if (options) {
-      // TODO
-      const { title } = options ?? {};
-      const messageTemplate = title?.template ?? ``;
-      const search = title?.match ?? /.+/;
+  private buildReporting(elements: Element[], parts?: ConsumeReportParts, options?: Report): ResultReport[] {
+    const units = elements.map((element) => {
+      const unit: ReportUnit = { element };
 
-      if (!messageTemplate) {
-        return elements.map((el) => el.textContent).filter((t) => t && search.test(t)) as string[];
+      if (parts?.title) {
+        unit.title = this.lookup(element, parts.title) || undefined;
       }
 
-      const template = Handlebars.compile(messageTemplate);
-      return this.buildReportingWithTemplate(elements, search, template);
-    }
-
-    return elements.map((el) => el.textContent).filter(Boolean) as string[];
-  }
-
-  private buildReportingWithTemplate(elements: Element[], search: RegExp, template: Handlebars.TemplateDelegate) {
-    const content: string[] = [];
-
-    for (const element of elements) {
-      const groups = element.textContent?.match(search)?.groups;
-      if (groups) {
-        content.push(template({ ...this.propertyReader.read(element), ...groups }));
+      if (parts?.description) {
+        unit.description = this.lookup(element, parts.description) || undefined;
       }
-    }
 
-    return content;
+      if (parts?.image) {
+        unit.image = this.lookup(element, parts.image) || undefined;
+      }
+
+      if (parts?.url) {
+        unit.url = this.lookup(element, parts.url) || undefined;
+      }
+
+      return unit;
+    });
+
+    return this.reporter.buildReport(units, options);
   }
 
   private getContentArray(options: Consume, container: Element): Element[] {
@@ -84,11 +81,7 @@ export class HtmlConsumer extends Consumer<HtmlSource> {
 
   protected lookup(element: Element | Document, options: LookupSettings): Element | null;
   protected lookup(element: Element | Document, options: LookupSettings, multiple: boolean): NodeListOf<Element>;
-  protected lookup(
-    element: Element | Document,
-    { mode, value }: LookupSettings,
-    multiple: boolean = false
-  ): Element | NodeList | null {
+  protected lookup(element: Element | Document, { mode, value }: LookupSettings, multiple: boolean = false): Element | NodeList | null {
     if (multiple && mode === LookupMode.enum.all) {
       return element.childNodes;
     }

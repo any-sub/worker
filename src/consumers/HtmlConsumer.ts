@@ -2,7 +2,7 @@ import { Consumer } from "./Consumer";
 import { HtmlSource } from "../readers";
 import { Injectable } from "@tsed/di";
 import { JSDOM } from "jsdom";
-import { Consume, ConsumeReportParts, LookupMode, LookupSettings, Report, State, Work } from "@any-sub/worker-transport";
+import { Consume, ConsumeReportParts, LookupMode, LookupSettings, Report, Work } from "@any-sub/worker-transport";
 import { HtmlReporter, ReportUnit } from "../reporters/HtmlReporter";
 import { ResultReport } from "../model/Report";
 
@@ -14,7 +14,7 @@ export class HtmlConsumer extends Consumer<HtmlSource> {
     super();
   }
 
-  public consume(source: HtmlSource, { source: { location }, consume, report }: Work): State {
+  public consume(source: HtmlSource, { source: { location }, consume, report }: Work): ResultReport[] {
     const dom = this.convert(source, location);
     const container = consume.lookup ? this.getContainer(dom, consume.lookup.container) : this.getContainer(dom, HtmlConsumer.BODY_LOOKUP);
 
@@ -23,7 +23,7 @@ export class HtmlConsumer extends Consumer<HtmlSource> {
     }
 
     const elements = this.getContentArray(consume, container);
-    return { data: this.buildReporting(elements, consume.parts, report) as any, lastUpdated: new Date() };
+    return this.buildReporting(elements, consume.parts, report);
   }
 
   private buildReporting(elements: Element[], parts?: ConsumeReportParts, options?: Report): ResultReport[] {

@@ -1,10 +1,12 @@
-import { Inject, Injectable } from "@tsed/di";
+import { Injectable } from "@tsed/di";
 import { HttpFetch } from "../base";
 import { HtmlSource, HttpReader } from "./HttpReader";
 
 @Injectable()
 export class HtmlReader extends HttpReader<HtmlSource> {
-  @Inject() httpFetch: HttpFetch;
+  constructor(private readonly httpFetch: HttpFetch) {
+    super();
+  }
 
   protected getAcceptedContentType(): string {
     return "text/html";

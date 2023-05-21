@@ -1,5 +1,4 @@
 import { expect } from "@jest/globals";
-import { PlatformTest } from "@tsed/common";
 import { HtmlElementPropertyReader } from "./HtmlElementPropertyReader";
 import { JSDOM } from "jsdom";
 
@@ -12,47 +11,48 @@ const html = `
 const document = new JSDOM(html).window.document;
 
 describe("HtmlElementPropertyReader", () => {
-  beforeEach(PlatformTest.create);
-  afterEach(PlatformTest.reset);
-
-  it("should create an instance", async () => {
+  it("should create an instance", () => {
     // When
-    const instance = await PlatformTest.invoke<HtmlElementPropertyReader>(HtmlElementPropertyReader);
+    const instance = new HtmlElementPropertyReader();
 
     // Then
     expect(instance).toBeInstanceOf(HtmlElementPropertyReader);
   });
 
-  it("should read properties for a non-defined element", async () => {
+  it("should read properties for a non-defined element", () => {
     // Given
-    const instance = await PlatformTest.invoke<HtmlElementPropertyReader>(HtmlElementPropertyReader);
+    const instance = new HtmlElementPropertyReader();
 
     // When
     const properties = instance.read(document.querySelector("div")!);
 
     // Then
-    expect(properties).toEqual({});
+    expect(properties).toEqual({ textContent: "Div" });
   });
 
-  it("should read properties for an anchor", async () => {
+  it("should read properties for an anchor", () => {
     // Given
-    const instance = await PlatformTest.invoke<HtmlElementPropertyReader>(HtmlElementPropertyReader);
+    const instance = new HtmlElementPropertyReader();
 
     // When
     const properties = instance.read(document.querySelector("a")!);
 
     // Then
-    expect(properties).toEqual({ link: "https://local.host/foo" });
+    expect(properties).toEqual({
+      link: "https://local.host/foo",
+      href: "https://local.host/foo",
+      textContent: "Anchor"
+    });
   });
 
-  it("should read properties for an image", async () => {
+  it("should read properties for an image", () => {
     // Given
-    const instance = await PlatformTest.invoke<HtmlElementPropertyReader>(HtmlElementPropertyReader);
+    const instance = new HtmlElementPropertyReader();
 
     // When
     const properties = instance.read(document.querySelector("img")!);
 
     // Then
-    expect(properties).toEqual({ link: "https://local.host/foo" });
+    expect(properties).toEqual({ link: "https://local.host/foo", src: "https://local.host/foo" });
   });
 });

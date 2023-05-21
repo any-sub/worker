@@ -1,17 +1,18 @@
 import { Consumer } from "./Consumer";
 import { HtmlSource } from "../readers";
-import { Inject, Injectable } from "@tsed/di";
+import { Injectable } from "@tsed/di";
 import { JSDOM } from "jsdom";
 import { Consume, ConsumeReportParts, LookupMode, LookupSettings, Report, State, Work } from "@any-sub/worker-transport";
-import { ReportUnit } from "../reporters/HtmlReporter";
+import { HtmlReporter, ReportUnit } from "../reporters/HtmlReporter";
 import { ResultReport } from "../model/Report";
-import { Reporter } from "../reporters/Reporter";
 
 @Injectable()
 export class HtmlConsumer extends Consumer<HtmlSource> {
-  @Inject() reporter: Reporter;
-
   private static readonly BODY_LOOKUP: LookupSettings = { mode: "css", value: "body" };
+
+  constructor(private readonly reporter: HtmlReporter) {
+    super();
+  }
 
   public consume(source: HtmlSource, { source: { location }, consume, report }: Work): State {
     const dom = this.convert(source, location);

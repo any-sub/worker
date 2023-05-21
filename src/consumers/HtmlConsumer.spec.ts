@@ -1,27 +1,12 @@
 import { expect } from "@jest/globals";
-import { PlatformTest } from "@tsed/common";
 import { HtmlConsumer } from "./HtmlConsumer";
 import { Chance } from "chance";
 import { LookupMode, Work } from "@any-sub/worker-transport";
-import { HtmlReporter, ReportUnit } from "../reporters/HtmlReporter";
-import { ResultReport } from "../model/Report";
 
 const chance = new Chance();
 
-const mockedDependencies = (resultReports: ResultReport[] = []) => [
-  {
-    token: HtmlReporter,
-    use: {
-      buildReport: (unit: ReportUnit[]): ResultReport[] => {
-        return resultReports;
-      }
-    }
-  }
-];
-
 describe("HTMLConsumer", () => {
-  beforeEach(PlatformTest.create);
-  afterEach(PlatformTest.reset);
+  let mockHtmlReporter: any = { buildReport: jest.fn() };
 
   const work = (containerLookup: string = "div#container", childrenLookup?: string): Work => ({
     type: "http",
@@ -43,8 +28,7 @@ describe("HTMLConsumer", () => {
 
   it("should create an instance", async () => {
     // When
-    const deps = mockedDependencies([]);
-    const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer, deps);
+    const instance = new HtmlConsumer(mockHtmlReporter);
 
     // Then
     expect(instance).toBeInstanceOf(HtmlConsumer);
@@ -52,8 +36,7 @@ describe("HTMLConsumer", () => {
 
   it("should throw when consuming non-html content", async () => {
     // Given
-    const deps = mockedDependencies([]);
-    const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer, deps);
+    const instance = new HtmlConsumer(mockHtmlReporter);
 
     // When - Then
     expect(() => instance.consume(chance.string(), work())).toThrow();
@@ -61,8 +44,7 @@ describe("HTMLConsumer", () => {
 
   it("should throw when using XPATH selector", async () => {
     // Given
-    const deps = mockedDependencies([]);
-    const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer, deps);
+    const instance = new HtmlConsumer(mockHtmlReporter);
     const workOptions = work("div#container");
     workOptions.consume.lookup!.container.mode = LookupMode.enum.xpath;
 
@@ -72,8 +54,7 @@ describe("HTMLConsumer", () => {
 
   it("should throw when using REGEX selector", async () => {
     // Given
-    const deps = mockedDependencies([]);
-    const instance = await PlatformTest.invoke<HtmlConsumer>(HtmlConsumer, deps);
+    const instance = new HtmlConsumer(mockHtmlReporter);
     const workOptions = work("div#container");
     workOptions.consume.lookup!.container.mode = LookupMode.enum.regex;
 

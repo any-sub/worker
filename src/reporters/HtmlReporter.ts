@@ -1,5 +1,5 @@
 import { Reporter } from "./Reporter";
-import { Inject, Injectable } from "@tsed/di";
+import { Injectable } from "@tsed/di";
 import { ResultReport } from "../model/Report";
 import { Report, TextReporting } from "@any-sub/worker-transport";
 import { isPresent } from "../util/TypeUtils";
@@ -7,7 +7,9 @@ import { HtmlElementPropertyReader } from "../consumers";
 
 @Injectable()
 export class HtmlReporter extends Reporter {
-  @Inject() propertyReader: HtmlElementPropertyReader;
+  constructor(private readonly propertyReader: HtmlElementPropertyReader) {
+    super();
+  }
 
   public buildReport(content: ReportUnit[], report?: Report): ResultReport[] {
     return report ? this.build(content, report) : this.buildDefault(content);

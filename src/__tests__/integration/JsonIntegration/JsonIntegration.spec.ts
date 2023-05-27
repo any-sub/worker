@@ -2,14 +2,11 @@ import { JsonReader } from "../../../readers";
 import { expect } from "@jest/globals";
 import { MockServer } from "jest-mock-server";
 import { HttpFetch } from "../../../base";
-import { Chance } from "chance";
 import * as fs from "fs";
 import * as path from "path";
 import { JsonConsumer } from "../../../consumers/JsonConsumer";
 import { JsonReporter } from "../../../reporters/JsonReporter";
 import { JsonJobExecutor } from "../../../job/JsonJobExecutor";
-
-const chance = new Chance();
 
 const readJsonSource = (name: string): string => {
   return fs.readFileSync(path.join(__dirname, `${name}.json`), "utf-8");
@@ -123,6 +120,9 @@ describe("JsonJobExecutor integration", () => {
         }
       },
       report: {
+        title: {
+          template: "{{$}}"
+        },
         description: {
           template: `{{second}} {{first}}`,
           match: /^(?<first>\w+) with some (?<second>\w+) value$/i

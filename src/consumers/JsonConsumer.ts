@@ -48,12 +48,13 @@ export class JsonConsumer extends Consumer<JsonSource> {
   private getContentArray(source: JsonSource, consume: Consume): JsonSource[] {
     const childrenLookup = consume.lookup?.children;
     if (childrenLookup) {
-      return this.lookup(source, childrenLookup);
+      const children = this.lookup(source, childrenLookup);
+      return isArray(children) ? children : [children];
     }
     return [source];
   }
 
-  private lookup(source: JsonSource, options: LookupSettings): JsonSource[] {
+  private lookup(source: JsonSource, options: LookupSettings): JsonSource {
     if (options.mode === LookupMode.enum.all) {
       return jp.query(source, "$.*").flat();
     }

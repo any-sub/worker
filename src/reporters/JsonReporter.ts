@@ -38,7 +38,7 @@ export class JsonReporter extends Reporter<JsonSource> {
   private reportTextElement(element: JsonSource, options?: TextReporting) {
     const stringValue = this.stringify(element);
     const groups = (options?.match && stringValue?.match(options.match)?.groups) || {};
-    return this.reportText(options?.template ?? stringValue, { ...{ $: element }, ...groups });
+    return element ? this.reportText(options?.template ?? "", { ...{ $: element }, ...groups }) : "";
   }
 }
 

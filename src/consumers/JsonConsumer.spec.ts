@@ -167,7 +167,7 @@ describe("JsonConsumer", () => {
       [
         {
           element: { title: "foo" },
-          title: ["foo"]
+          title: "foo"
         }
       ],
       mockReport

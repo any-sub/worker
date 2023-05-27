@@ -14,6 +14,6 @@ export class JsonReader extends HttpReader<JsonSource> {
 
   public async read(rawURL: string) {
     const [contents] = await this.readURL(this.httpFetch, rawURL);
-    return contents;
+    return JSON.parse(contents);
   }
 }

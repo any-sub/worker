@@ -40,7 +40,19 @@ describe("JsonReader", () => {
     const json = await instance.read("https://local.host");
 
     // Then
-    expect(json).toEqual(expectedJSON);
+    expect(json).toEqual({ a: "b" });
+  });
+
+  it("should return the JSON array contents of the provided URL", async () => {
+    // Given
+    const expectedJSON = `[{"a": "b"}]`;
+    const instance = new JsonReader(mockedJsonHttpFetch(expectedJSON, 200));
+
+    // When
+    const json = await instance.read("https://local.host");
+
+    // Then
+    expect(json).toEqual([{ a: "b" }]);
   });
 
   it("should throw if result not successful", async () => {
@@ -69,6 +81,6 @@ describe("JsonReader", () => {
     const json = await instance.read("https://local.host");
 
     // Then
-    expect(json).toEqual(expectedJSON);
+    expect(json).toEqual({ a: "b" });
   });
 });

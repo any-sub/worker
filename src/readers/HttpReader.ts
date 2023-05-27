@@ -32,4 +32,4 @@ export abstract class HttpReader<T extends HttpSource> {
 export type HttpSource = XmlSource | HtmlSource | JsonSource;
 export type XmlSource = string;
 export type HtmlSource = string;
-export type JsonSource = string;
+export type JsonSource = string | number | boolean | { [x: string]: JsonSource } | Array<JsonSource>;

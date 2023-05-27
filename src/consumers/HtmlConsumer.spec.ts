@@ -39,7 +39,7 @@ describe("HTMLConsumer", () => {
     const instance = new HtmlConsumer(mockHtmlReporter);
 
     // When - Then
-    expect(() => instance.consume(chance.string(), work())).toThrow();
+    expect(() => instance.consume(chance.string(), work())).toThrow("Container not found.");
   });
 
   it("should throw when using XPATH selector", async () => {
@@ -49,7 +49,7 @@ describe("HTMLConsumer", () => {
     workOptions.consume.lookup!.container.mode = LookupMode.enum.xpath;
 
     // When - Then
-    expect(() => instance.consume(chance.string(), workOptions)).toThrow();
+    expect(() => instance.consume(chance.string(), workOptions)).toThrow("Only CSS selector is supported when consuming HTML");
   });
 
   it("should throw when using REGEX selector", async () => {
@@ -59,6 +59,6 @@ describe("HTMLConsumer", () => {
     workOptions.consume.lookup!.container.mode = LookupMode.enum.regex;
 
     // When - Then
-    expect(() => instance.consume(chance.string(), workOptions)).toThrow();
+    expect(() => instance.consume(chance.string(), workOptions)).toThrow("Only CSS selector is supported when consuming HTML");
   });
 });

@@ -3,7 +3,7 @@ import { HtmlSource } from "../readers";
 import { Injectable } from "@tsed/di";
 import { JSDOM } from "jsdom";
 import { Consume, ConsumeReportParts, LookupMode, LookupSettings, Report, Work } from "@any-sub/worker-transport";
-import { HtmlReporter, ReportUnit } from "../reporters/HtmlReporter";
+import { HtmlReporter } from "../reporters/HtmlReporter";
 import { ResultReport } from "../model/Report";
 
 @Injectable()
@@ -27,28 +27,9 @@ export class HtmlConsumer extends Consumer<HtmlSource> {
   }
 
   private buildReporting(elements: Element[], parts?: ConsumeReportParts, options?: Report): ResultReport[] {
-    const units = elements.map((element) => {
-      const unit: ReportUnit = { element };
-
-      if (parts?.title) {
-        unit.title = this.lookup(element, parts.title) || undefined;
-      }
-
-      if (parts?.description) {
-        unit.description = this.lookup(element, parts.description) || undefined;
-      }
-
-      if (parts?.image) {
-        unit.image = this.lookup(element, parts.image) || undefined;
-      }
-
-      if (parts?.url) {
-        unit.url = this.lookup(element, parts.url) || undefined;
-      }
-
-      return unit;
-    });
-
+    const units = elements.map((element) =>
+      this.createReportUnit(element, (el, settings) => this.lookup(el, settings) || undefined, parts)
+    );
     return this.reporter.buildReport(units, options);
   }
 
@@ -88,7 +69,7 @@ export class HtmlConsumer extends Consumer<HtmlSource> {
 
     if (mode !== LookupMode.enum.css) {
       // TODO
-      throw new Error("CSS");
+      throw new Error("Only CSS selector is supported when consuming HTML");
     }
 
     if (multiple) {

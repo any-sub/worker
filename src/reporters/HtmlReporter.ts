@@ -1,4 +1,4 @@
-import { Reporter } from "./Reporter";
+import { AbstractReportUnit, Reporter } from "./Reporter";
 import { Injectable } from "@tsed/di";
 import { ResultReport } from "../model/Report";
 import { Report, TextReporting } from "@any-sub/worker-transport";
@@ -6,7 +6,7 @@ import { isPresent } from "../util/TypeUtils";
 import { HtmlElementPropertyReader } from "../consumers";
 
 @Injectable()
-export class HtmlReporter extends Reporter {
+export class HtmlReporter extends Reporter<Element> {
   constructor(private readonly propertyReader: HtmlElementPropertyReader) {
     super();
   }
@@ -51,4 +51,4 @@ export class HtmlReporter extends Reporter {
   }
 }
 
-export type ReportUnit = Partial<Record<keyof Report, Element>> & { element: Element };
+export type ReportUnit = AbstractReportUnit<Element>;

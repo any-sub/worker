@@ -36,7 +36,7 @@ export class HtmlReporter extends Reporter<Element> {
 
   private buildDefault(content: ReportUnit[]): ResultReport[] {
     return content
-      .map((el) => el.element.textContent)
+      .map((el) => el.description?.textContent ?? el.element.textContent)
       .filter(isPresent)
       .map((description) => ({ description }));
   }

@@ -62,6 +62,7 @@ export class JsonConsumer extends Consumer<JsonSource> {
       throw new Error("Only JSONPATH is supported when consuming json");
     }
 
-    return jp.query(source, options.value).flat();
+    const result = jp.query(source, options.value).flat();
+    return result.length === 1 ? result[0] : result;
   }
 }

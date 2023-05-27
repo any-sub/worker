@@ -4,7 +4,7 @@ import { HtmlElementPropertyReader } from "../consumers";
 
 const chance = new Chance();
 
-const el = (properties: Record<string, unknown>, tagName: string = "") =>
+const el = (properties: Record<string, unknown> = {}, tagName: string = "") =>
   ({
     ...properties,
     getAttributeNames: () => Object.keys(properties),
@@ -16,6 +16,26 @@ describe("HtmlReporter", () => {
   let htmlElementPropertyReader = new HtmlElementPropertyReader();
 
   describe("default reporting", () => {
+    it("should build from description element using default reporting", async () => {
+      // Given
+      const content = chance.string();
+      const instance = new HtmlReporter(htmlElementPropertyReader);
+
+      // When
+      const result = instance.buildReport([
+        {
+          description: el({ textContent: content }),
+          element: el()
+        }
+      ]);
+
+      // Then
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({
+        description: content
+      });
+    });
+
     it("should build using default reporting", async () => {
       // Given
       const content = chance.string();

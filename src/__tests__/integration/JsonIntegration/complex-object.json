@@ -1,0 +1,18 @@
+{
+  "details": {
+    "updates": [
+      {
+        "lastUpdated": 10000,
+        "heading": "Title1",
+        "body": "Desc1 with some foo value",
+        "id": 14533
+      },
+      {
+        "lastUpdated": 12000,
+        "heading": "Title2",
+        "body": "Desc2 with some bar value",
+        "id": 22554
+      }
+    ]
+  }
+}

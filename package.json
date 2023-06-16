@@ -9,7 +9,7 @@
     "@tsed/di": "7.30.0",
     "@tsed/logger": "6.6.2",
     "@types/node": "20.1.1",
-    "dotenv": "16.1.4",
+    "dotenv": "16.2.0",
     "handlebars": "4.7.7",
     "jsdom": "22.1.0",
     "jsonpath": "1.1.1",

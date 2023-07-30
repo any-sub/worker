@@ -4,7 +4,7 @@ import { MockServer } from "jest-mock-server";
 import { HttpFetch } from "../../../base";
 import * as fs from "fs";
 import * as path from "path";
-import { JsonConsumer } from "../../../consumers/JsonConsumer";
+import { JsonConsumer } from "../../../consumers";
 import { JsonReporter } from "../../../reporters/JsonReporter";
 import { JsonJobExecutor } from "../../../job/JsonJobExecutor";
 
@@ -18,7 +18,7 @@ describe("JsonJobExecutor integration", () => {
   afterAll(() => server.stop());
   beforeEach(() => server.reset());
 
-  it("should report with default reporting for single string", async () => {
+  it("should throw for single string", async () => {
     // Given
     const reader = new JsonReader(new HttpFetch());
     const consumer = new JsonConsumer(new JsonReporter());
@@ -29,19 +29,18 @@ describe("JsonJobExecutor integration", () => {
       ctx.body = readJsonSource("single-string");
     });
 
-    // When
-    const result = (await executor.execute({
-      source: {
-        location: `${server.getURL().toString()}`,
-        type: "json"
-      },
-      type: "http",
-      id: "",
-      consume: {}
-    })) as any;
-
-    // Then
-    expect(result.data[0].description.trim()).toEqual("Foo");
+    // When - Then
+    await expect(
+      executor.execute({
+        source: {
+          location: `${server.getURL().toString()}`,
+          type: "json"
+        },
+        type: "http",
+        id: "",
+        consume: {}
+      })
+    ).rejects.toThrow("obj needs to be an object");
   });
 
   it("should report with default reporting for object", async () => {
@@ -91,14 +90,8 @@ describe("JsonJobExecutor integration", () => {
       id: "",
       consume: {
         lookup: {
-          container: {
-            mode: "jsonpath",
-            value: "$.details"
-          },
-          children: {
-            mode: "jsonpath",
-            value: "$.updates"
-          }
+          mode: "jsonpath",
+          value: "$.details.updates.*"
         },
         parts: {
           title: {
@@ -125,7 +118,7 @@ describe("JsonJobExecutor integration", () => {
         },
         description: {
           template: `{{second}} {{first}}`,
-          match: /^(?<first>\w+) with some (?<second>\w+) value$/i
+          match: "^(?<first>\\w+) with some (?<second>\\w+) value$"
         },
         image: {
           template: "http://someurl/{{$}}.png"

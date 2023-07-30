@@ -1,5 +1,5 @@
 import { HtmlReader } from "../../readers";
-import { HtmlConsumer, HtmlElementPropertyReader } from "../../consumers";
+import { HtmlConsumer } from "../../consumers";
 import { expect } from "@jest/globals";
 import { LookupMode } from "@any-sub/worker-transport";
 import { HtmlReporter } from "../../reporters/HtmlReporter";
@@ -9,7 +9,7 @@ describe("Reader -> Consumer integration", () => {
   it("should return content for a container", async () => {
     // Given
     const reader = new HtmlReader(mockedHttpFetch(`<div id="container">Some result</div>`));
-    const consumer = new HtmlConsumer(new HtmlReporter(new HtmlElementPropertyReader()));
+    const consumer = new HtmlConsumer(new HtmlReporter());
 
     // When
     const url = "https://local.host";
@@ -21,9 +21,7 @@ describe("Reader -> Consumer integration", () => {
       type: "http",
       id: "",
       consume: {
-        lookup: {
-          container: { mode: LookupMode.enum.css, value: "#container" }
-        }
+        lookup: { mode: LookupMode.enum.css, value: "#container" }
       }
     });
 

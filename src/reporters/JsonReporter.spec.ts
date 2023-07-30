@@ -173,7 +173,7 @@ describe("JsonReporter", () => {
           }
         ],
         {
-          title: { template: templateMessage, match: /(?<bar>.+)/ }
+          title: { template: templateMessage, match: "(?<bar>.+)" }
         }
       );
 
@@ -196,7 +196,7 @@ describe("JsonReporter", () => {
 
       // When
       const result = instance.buildReport([{ element: { content } }], {
-        title: { template: templateMessage, match: /(?<foo>.+)/ }
+        title: { template: templateMessage, match: "(?<foo>.+)" }
       });
 
       // Then

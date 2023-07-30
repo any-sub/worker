@@ -10,16 +10,14 @@ const el = (properties: Record<string, unknown> = {}, tagName: string = "") =>
     getAttributeNames: () => Object.keys(properties),
     getAttribute: (name: string) => properties[name],
     getTagName: () => tagName
-  } as any);
+  }) as any;
 
 describe("HtmlReporter", () => {
-  let htmlElementPropertyReader = new HtmlElementPropertyReader();
-
   describe("default reporting", () => {
     it("should build from description element using default reporting", async () => {
       // Given
       const content = chance.string();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([
@@ -39,7 +37,7 @@ describe("HtmlReporter", () => {
     it("should build using default reporting", async () => {
       // Given
       const content = chance.string();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ textContent: content }) }]);
@@ -54,7 +52,7 @@ describe("HtmlReporter", () => {
     it("should build using default reporting excluding empty elements", async () => {
       // Given
       const content = chance.string();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ textContent: content }) }, { element: el({ textContent: "" }) }]);
@@ -72,7 +70,7 @@ describe("HtmlReporter", () => {
       // Given
       const content = chance.string();
       const templateMessage = chance.string();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ textContent: content }) }], { title: { template: templateMessage } });
@@ -92,7 +90,7 @@ describe("HtmlReporter", () => {
       const content = chance.string();
       const templateMessage = "{{foo}}";
       const fooContent = chance.string();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport(
@@ -122,7 +120,7 @@ describe("HtmlReporter", () => {
       const content = chance.string();
       const templateMessage = "{{foo}} {{bar}}";
       const fooContent = chance.string();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport(
@@ -135,7 +133,7 @@ describe("HtmlReporter", () => {
           }
         ],
         {
-          title: { template: templateMessage, match: /(?<bar>.+)/ }
+          title: { template: templateMessage, match: "(?<bar>.+)" }
         }
       );
 
@@ -154,11 +152,11 @@ describe("HtmlReporter", () => {
       const content = chance.string();
       const templateMessage = "{{foo}}";
       const fooContent = chance.string();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ textContent: content }) }], {
-        title: { template: templateMessage, match: /(?<foo>.+)/ }
+        title: { template: templateMessage, match: "(?<foo>.+)" }
       });
 
       // Then
@@ -177,7 +175,7 @@ describe("HtmlReporter", () => {
       // Given
       const content = chance.string();
       const templateMessage = chance.string();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ textContent: content }) }], { description: { template: templateMessage } });
@@ -197,7 +195,7 @@ describe("HtmlReporter", () => {
       const content = chance.string();
       const templateMessage = "{{foo}}";
       const fooContent = chance.string();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport(
@@ -227,7 +225,7 @@ describe("HtmlReporter", () => {
       const content = chance.string();
       const templateMessage = "{{foo}} {{bar}}";
       const fooContent = chance.string();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport(
@@ -240,7 +238,7 @@ describe("HtmlReporter", () => {
           }
         ],
         {
-          description: { template: templateMessage, match: /(?<bar>.+)/ }
+          description: { template: templateMessage, match: "(?<bar>.+)" }
         }
       );
 
@@ -259,11 +257,11 @@ describe("HtmlReporter", () => {
       const content = chance.string();
       const templateMessage = "{{foo}}";
       const fooContent = chance.string();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ textContent: content }) }], {
-        description: { template: templateMessage, match: /(?<foo>.+)/ }
+        description: { template: templateMessage, match: "(?<foo>.+)" }
       });
 
       // Then
@@ -282,7 +280,7 @@ describe("HtmlReporter", () => {
       // Given
       const content = chance.string();
       const templateUrl = chance.url();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ textContent: content }) }], { image: { template: templateUrl } });
@@ -300,7 +298,7 @@ describe("HtmlReporter", () => {
     it("should report with source", async () => {
       // Given
       const url = chance.url();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ src: url }) }], {});
@@ -317,13 +315,13 @@ describe("HtmlReporter", () => {
 
     it("should report with template", async () => {
       // Given
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ textContent: "foo: #123 bar" }) }], {
         image: {
           template: "https://someurl/{{id}}",
-          match: /foo: #(?<id>\d+) bar/
+          match: "foo: #(?<id>\\d+) bar"
         }
       });
 
@@ -340,13 +338,13 @@ describe("HtmlReporter", () => {
     it("should report with non-standard attribute template", async () => {
       // Given
       const url = chance.url();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ source: url }) }], {
         image: {
           template: "{{source}}",
-          match: /.*/
+          match: ".*"
         }
       });
 
@@ -366,7 +364,7 @@ describe("HtmlReporter", () => {
       // Given
       const content = chance.string();
       const templateUrl = chance.url();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ textContent: content }) }], { url: { template: templateUrl } });
@@ -384,7 +382,7 @@ describe("HtmlReporter", () => {
     it("should report with source", async () => {
       // Given
       const url = chance.url();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ href: url }) }], {});
@@ -401,13 +399,13 @@ describe("HtmlReporter", () => {
 
     it("should report with template", async () => {
       // Given
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ textContent: "foo: #123 bar" }) }], {
         url: {
           template: "https://someurl/{{id}}",
-          match: /foo: #(?<id>\d+) bar/
+          match: "foo: #(?<id>\\d+) bar"
         }
       });
 
@@ -424,13 +422,13 @@ describe("HtmlReporter", () => {
     it("should report with non-standard attribute template", async () => {
       // Given
       const url = chance.url();
-      const instance = new HtmlReporter(htmlElementPropertyReader);
+      const instance = new HtmlReporter();
 
       // When
       const result = instance.buildReport([{ element: el({ location: url }) }], {
         url: {
           template: "{{location}}",
-          match: /.*/
+          match: ".*"
         }
       });
 

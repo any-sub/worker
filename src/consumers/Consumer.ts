@@ -9,7 +9,7 @@ export abstract class Consumer<T extends HttpSource> {
   protected createReportUnit<T, R extends AbstractReportUnit<T> = AbstractReportUnit<T>>(
     element: T,
     lookupFn: (el: T, settings: LookupSettings) => T | undefined,
-    parts?: ConsumeReportParts
+    parts?: Nullable<ConsumeReportParts>
   ): R {
     const unit = { element } as R;
 

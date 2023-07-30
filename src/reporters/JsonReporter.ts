@@ -7,7 +7,7 @@ import { isPresent } from "../util/TypeUtils";
 
 @Injectable()
 export class JsonReporter extends Reporter<JsonSource> {
-  public buildReport(content: ReportUnit[], report?: Report): ResultReport[] {
+  public buildReport(content: ReportUnit[], report?: Nullable<Report>): ResultReport[] {
     return report ? this.build(content, report) : this.buildDefault(content);
   }
 
@@ -31,11 +31,11 @@ export class JsonReporter extends Reporter<JsonSource> {
     return typeof source === "string" ? source : JSON.stringify(source);
   }
 
-  private buildText(element: JsonSource, report?: TextReporting, reportingElement?: JsonSource) {
+  private buildText(element: JsonSource, report?: Nullable<TextReporting>, reportingElement?: JsonSource) {
     return this.reportTextElement(reportingElement ?? element, report);
   }
 
-  private reportTextElement(element: JsonSource, options?: TextReporting) {
+  private reportTextElement(element: JsonSource, options?: Nullable<TextReporting>) {
     const stringValue = this.stringify(element);
     const groups = (options?.match && stringValue?.match(options.match)?.groups) || {};
     return element ? this.reportText(options?.template ?? "", { ...{ $: element }, ...groups }) : "";

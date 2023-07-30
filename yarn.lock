@@ -15,10 +15,10 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@any-sub/worker-transport@0.0.12":
-  version "0.0.12"
-  resolved "https://europe-west1-npm.pkg.dev/personalweb-279207/any-sub/@any-sub/worker-transport/-/@any-sub/worker-transport-0.0.12.tgz#71ebda7bd944948f5d561b135d30eeedc7071b47"
-  integrity sha512-QZz+zSgUUNrt3NPUQoyM0dXgDIafwVFLqG5KtKKdpOmUT42wn0gh4j53XYOCh3BFf8ssrZ6UBi33l41zdDVMSg==
+"@any-sub/worker-transport@0.0.14":
+  version "0.0.14"
+  resolved "https://europe-west1-npm.pkg.dev/personalweb-279207/any-sub/@any-sub/worker-transport/-/@any-sub/worker-transport-0.0.14.tgz#fcd066a2e03e1a22b24fb3aec6947c5df235481c"
+  integrity sha512-zbUoC2gsz95hVk2GKqFh1tb7xNxcXck3JpIbzenF9LD2ZPE5kCBT1zSAZyUNjOSu3yG1U9wBwliQrqrUp2do0g==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.18.6", "@babel/code-frame@^7.21.4":
   version "7.21.4"

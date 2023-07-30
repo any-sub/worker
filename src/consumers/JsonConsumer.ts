@@ -1,61 +1,50 @@
 import { Consumer } from "./Consumer";
 import { JsonSource } from "../readers";
-import { Consume, ConsumeReportParts, LookupMode, LookupSettings, Report, Work } from "@any-sub/worker-transport";
+import { ConsumeReportParts, LookupMode, LookupSettings, Report, Work } from "@any-sub/worker-transport";
 import { ResultReport } from "../model/Report";
 import jp from "jsonpath";
-import { isArray, isPresent } from "../util/TypeUtils";
+import { isPresent } from "../util/TypeUtils";
 import { JsonReporter } from "../reporters/JsonReporter";
+import { Injectable } from "@tsed/di";
 
+@Injectable()
 export class JsonConsumer extends Consumer<JsonSource> {
+  private static readonly ROOT_LOOKUP: LookupSettings = { mode: "jsonpath", value: "$" };
+
   constructor(private readonly reporter: JsonReporter) {
     super();
   }
 
   public consume(source: JsonSource, { consume, report }: Work): ResultReport[] {
-    let elements: JsonSource[];
-    const containerLookup = consume.lookup?.container;
-    if (isArray(source)) {
-      const containers = source.map((listElement) => this.getContainer(listElement, containerLookup)).filter(isPresent);
+    const elements = this.lookup(source, consume.lookup ?? JsonConsumer.ROOT_LOOKUP).filter(isPresent);
 
-      if (!containers.length) {
-        throw new Error("Containers not found.");
-      }
-
-      elements = containers.map((container) => this.getContentArray(container!, consume)).flat();
-    } else {
-      const container = this.getContainer(source, containerLookup);
-
-      if (!container) {
-        throw new Error("Container not found.");
-      }
-
-      elements = this.getContentArray(container, consume);
+    if (!elements || !elements.length) {
+      throw new Error("No elements found.");
     }
 
     return this.buildReporting(elements, consume.parts, report);
   }
 
-  private buildReporting(elements: JsonSource[], parts?: ConsumeReportParts, options?: Report): ResultReport[] {
-    const units = elements.map((element) => this.createReportUnit(element, (element, settings) => this.lookup(element, settings), parts));
+  private buildReporting(elements: JsonSource[], parts?: Nullable<ConsumeReportParts>, options?: Nullable<Report>): ResultReport[] {
+    const units = elements.map((element) =>
+      this.createReportUnit(
+        element,
+        (element, settings) => {
+          const result = this.lookup(element, settings);
+          return result.length === 1 ? result[0] : result;
+        },
+        parts
+      )
+    );
     return this.reporter.buildReport(units, options);
   }
 
-  private getContainer(source: JsonSource, containerLookupOptions?: LookupSettings): JsonSource | undefined {
-    const container = containerLookupOptions ? this.lookup(source, containerLookupOptions) : source;
-    return isArray(container) ? container[0] : container;
-  }
-
-  private getContentArray(source: JsonSource, consume: Consume): JsonSource[] {
-    const childrenLookup = consume.lookup?.children;
-    if (childrenLookup) {
-      const children = this.lookup(source, childrenLookup);
-      return isArray(children) ? children : [children];
-    }
-    return [source];
-  }
-
-  private lookup(source: JsonSource, options: LookupSettings): JsonSource {
+  private lookup(source: JsonSource, options: LookupSettings): JsonSource[] {
     if (options.mode === LookupMode.enum.all) {
+      if (options.value) {
+        const elements = jp.query(source, options.value);
+        return elements.map((element) => jp.query(element, "$.*")).flat();
+      }
       return jp.query(source, "$.*").flat();
     }
 
@@ -63,7 +52,6 @@ export class JsonConsumer extends Consumer<JsonSource> {
       throw new Error("Only JSONPATH is supported when consuming json");
     }
 
-    const result = jp.query(source, options.value).flat();
-    return result.length === 1 ? result[0] : result;
+    return jp.query(source, options.value).flat();
   }
 }

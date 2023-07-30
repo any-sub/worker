@@ -7,28 +7,29 @@ import { HtmlElementPropertyReader } from "../consumers";
 
 @Injectable()
 export class HtmlReporter extends Reporter<Element> {
-  constructor(private readonly propertyReader: HtmlElementPropertyReader) {
-    super();
-  }
+  // constructor(private readonly propertyReader: HtmlElementPropertyReader) {
+  //   super();
+  // }
+  private readonly propertyReader = new HtmlElementPropertyReader();
 
-  public buildReport(content: ReportUnit[], report?: Report): ResultReport[] {
+  public buildReport(content: ReportUnit[], report?: Nullable<Report>): ResultReport[] {
     return report ? this.build(content, report) : this.buildDefault(content);
   }
 
-  private build(content: ReportUnit[], report: Report): ResultReport[] {
+  private build(content: ReportUnit[], report: Nullable<Report>): ResultReport[] {
     return content.map((unit) => ({
-      title: this.buildText(unit.element, report.title, unit.title),
-      description: this.buildText(unit.element, report.description, unit.description),
-      image: this.buildAttr(unit.element, "src", report.image, unit.description),
-      url: this.buildAttr(unit.element, "href", report.url, unit.description)
+      title: this.buildText(unit.element, report?.title, unit.title),
+      description: this.buildText(unit.element, report?.description, unit.description),
+      image: this.buildAttr(unit.element, "src", report?.image, unit.description),
+      url: this.buildAttr(unit.element, "href", report?.url, unit.description)
     }));
   }
 
-  private buildText(element: Element, report?: TextReporting, reportingElement?: Element) {
+  private buildText(element: Element, report?: Nullable<TextReporting>, reportingElement?: Element) {
     return this.reportTextElement(reportingElement ?? element, report);
   }
 
-  private buildAttr(element: Element, attribute: string, report?: TextReporting, reportingElement?: Element) {
+  private buildAttr(element: Element, attribute: string, report?: Nullable<TextReporting>, reportingElement?: Element) {
     return (
       this.reportElementAttribute(reportingElement ?? element, attribute) ?? this.reportTextElement(reportingElement ?? element, report)
     );
@@ -41,7 +42,7 @@ export class HtmlReporter extends Reporter<Element> {
       .map((description) => ({ description }));
   }
 
-  private reportTextElement(element: Element, options?: TextReporting) {
+  private reportTextElement(element: Element, options?: Nullable<TextReporting>) {
     const groups = (options?.match && element.textContent?.match(options.match)?.groups) || {};
     return this.reportText(options?.template ?? "", { ...this.propertyReader.read(element), ...groups });
   }

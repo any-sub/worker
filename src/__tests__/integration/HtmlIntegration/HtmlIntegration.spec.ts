@@ -1,5 +1,5 @@
 import { HtmlReader } from "../../../readers";
-import { HtmlConsumer, HtmlElementPropertyReader } from "../../../consumers";
+import { HtmlConsumer } from "../../../consumers";
 import { expect } from "@jest/globals";
 import { HtmlReporter } from "../../../reporters/HtmlReporter";
 import { MockServer } from "jest-mock-server";
@@ -24,7 +24,7 @@ describe("HtmlJobExecutor integration", () => {
   it("should report with default reporting", async () => {
     // Given
     const reader = new HtmlReader(new HttpFetch());
-    const consumer = new HtmlConsumer(new HtmlReporter(new HtmlElementPropertyReader()));
+    const consumer = new HtmlConsumer(new HtmlReporter());
     const executor = new HtmlJobExecutor(reader, consumer);
     server.get("/").mockImplementation((ctx) => {
       ctx.status = 200;

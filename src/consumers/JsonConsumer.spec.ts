@@ -2,14 +2,16 @@ import { Chance } from "chance";
 import { JsonConsumer } from "./JsonConsumer";
 import { expect } from "@jest/globals";
 import { LookupMode, Work } from "@any-sub/worker-transport";
+import { z } from "zod";
 
 const chance = new Chance();
+type LookupMode = z.infer<typeof LookupMode>;
 
 describe("JsonConsumer", () => {
   const mockReport = jest.fn() as any;
   let mockJsonReporter: any = { buildReport: jest.fn() };
 
-  const work = (containerLookup: string = "$", childrenLookup?: string): Work => ({
+  const work = (lookup: string = "$", mode: LookupMode = LookupMode.enum.jsonpath): Work => ({
     type: "http",
     id: chance.string(),
     source: {
@@ -18,11 +20,8 @@ describe("JsonConsumer", () => {
     },
     consume: {
       lookup: {
-        container: {
-          mode: LookupMode.enum.jsonpath,
-          value: containerLookup
-        },
-        ...(childrenLookup && { children: { mode: LookupMode.enum.jsonpath, value: childrenLookup } })
+        mode,
+        value: lookup
       }
     },
     report: mockReport
@@ -48,7 +47,7 @@ describe("JsonConsumer", () => {
     // Given
     const instance = new JsonConsumer(mockJsonReporter);
     const workOptions = work("div#container");
-    workOptions.consume.lookup!.container.mode = LookupMode.enum.xpath;
+    workOptions.consume.lookup!.mode = LookupMode.enum.xpath;
 
     // When - Then
     expect(() => instance.consume({ foo: "bar" }, workOptions)).toThrow("Only JSONPATH is supported when consuming json");
@@ -68,14 +67,13 @@ describe("JsonConsumer", () => {
   it("should consume an array source with all containers", () => {
     // Given
     const instance = new JsonConsumer(mockJsonReporter);
-    const workOptions = work();
-    workOptions.consume.lookup!.container.mode = "all";
+    const workOptions = work("$", LookupMode.enum.all);
 
     // When
     instance.consume([{ container: { title: "foo" } }], workOptions);
 
     // Then
-    expect(mockJsonReporter.buildReport).toHaveBeenCalledWith([{ element: { title: "foo" } }], mockReport);
+    expect(mockJsonReporter.buildReport).toHaveBeenCalledWith([{ element: { container: { title: "foo" } } }], mockReport);
   });
 
   it("should consume an array source with children", () => {
@@ -83,7 +81,7 @@ describe("JsonConsumer", () => {
     const instance = new JsonConsumer(mockJsonReporter);
 
     // When
-    instance.consume([{ container: { children: [{ title: "foo" }] } }], work("$.container", "$.children"));
+    instance.consume([{ container: { children: [{ title: "foo" }] } }], work("$..container.children"));
 
     // Then
     expect(mockJsonReporter.buildReport).toHaveBeenCalledWith([{ element: { title: "foo" } }], mockReport);
@@ -94,7 +92,7 @@ describe("JsonConsumer", () => {
     const instance = new JsonConsumer(mockJsonReporter);
 
     // When - Then
-    expect(() => instance.consume([{ notAContainer: { title: "foo" } }], work("$..container"))).toThrow("Containers not found.");
+    expect(() => instance.consume([{ notAContainer: { title: "foo" } }], work("$..container"))).toThrow("No elements found.");
   });
 
   it("should consume an object source", () => {
@@ -113,7 +111,7 @@ describe("JsonConsumer", () => {
     const instance = new JsonConsumer(mockJsonReporter);
 
     // When
-    instance.consume({ container: { children: [{ title: "foo" }] } }, work("$.container", "$.children"));
+    instance.consume({ container: { children: [{ title: "foo" }] } }, work("$.container.children"));
 
     // Then
     expect(mockJsonReporter.buildReport).toHaveBeenCalledWith([{ element: { title: "foo" } }], mockReport);
@@ -122,8 +120,7 @@ describe("JsonConsumer", () => {
   it("should consume an object source with all children", () => {
     // Given
     const instance = new JsonConsumer(mockJsonReporter);
-    const workOptions = work("$.container");
-    workOptions.consume.lookup!.children! = { mode: "all", value: "" };
+    const workOptions = work("$.container.children", LookupMode.enum.all);
 
     // When
     instance.consume({ container: { children: [{ title: "foo" }] } }, workOptions);
@@ -137,14 +134,14 @@ describe("JsonConsumer", () => {
     const instance = new JsonConsumer(mockJsonReporter);
 
     // When - Then
-    expect(() => instance.consume({ notAContainer: { title: "foo" } }, work("$..container"))).toThrow("Container not found.");
+    expect(() => instance.consume({ notAContainer: { title: "foo" } }, work("$..container"))).toThrow("No elements found.");
   });
 
   it("should use source when container not specified for an array source", () => {
     // Given
     const instance = new JsonConsumer(mockJsonReporter);
     const workOptions = work();
-    Reflect.deleteProperty(workOptions.consume.lookup!, "container");
+    Reflect.deleteProperty(workOptions.consume, "lookup");
 
     // When
     instance.consume([{ title: "foo" }], workOptions);

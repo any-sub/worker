@@ -3,9 +3,14 @@ import { Work } from "@any-sub/worker-transport";
 import { ResultReport } from "../model/Report";
 import { JsonReader } from "../readers";
 import { JsonConsumer } from "../consumers/JsonConsumer";
+import { Injectable } from "@tsed/di";
 
+@Injectable()
 export class JsonJobExecutor extends JobExecutor {
-  constructor(private readonly reader: JsonReader, private readonly consumer: JsonConsumer) {
+  constructor(
+    private readonly reader: JsonReader,
+    private readonly consumer: JsonConsumer
+  ) {
     super();
   }
 

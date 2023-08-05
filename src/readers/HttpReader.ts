@@ -4,18 +4,18 @@ import { HttpFetch } from "../base";
 export abstract class HttpReader<T extends HttpSource> {
   public abstract read(url: string | URL): Promise<T>;
 
-  protected abstract getAcceptedContentType(): string;
+  protected abstract getAcceptedContentTypes(): string[];
 
   protected async readURL(httpFetch: HttpFetch, rawURL: string | URL): Promise<[contents: string, res: Response]> {
     const url = new URL(rawURL);
 
     const res = await httpFetch.fetch(url, {
       headers: {
-        Accept: this.getAcceptedContentType()
+        Accept: this.getAcceptedContentTypes().join(",")
       }
     });
 
-    if (!res.headers.get("content-type")?.startsWith(this.getAcceptedContentType())) {
+    if (!this.getAcceptedContentTypes().find((type) => res.headers.get("content-type")?.startsWith(type))) {
       throw new Error("Content type returned does not match");
     }
 

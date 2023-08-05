@@ -8,8 +8,8 @@ export class JsonReader extends HttpReader<JsonSource> {
     super();
   }
 
-  protected getAcceptedContentType(): string {
-    return "application/json";
+  protected getAcceptedContentTypes(): string[] {
+    return ["application/json"];
   }
 
   public async read(rawURL: string) {

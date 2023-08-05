@@ -8,8 +8,8 @@ export class HtmlReader extends HttpReader<HtmlSource> {
     super();
   }
 
-  protected getAcceptedContentType(): string {
-    return "text/html";
+  protected getAcceptedContentTypes(): string[] {
+    return ["text/html"];
   }
 
   public async read(rawURL: string | URL) {

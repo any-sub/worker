@@ -20,8 +20,8 @@ export class HtmlReporter extends Reporter<Element> {
     return content.map((unit) => ({
       title: this.buildText(unit.element, report?.title, unit.title),
       description: this.buildText(unit.element, report?.description, unit.description),
-      image: this.buildAttr(unit.element, "src", report?.image, unit.description),
-      url: this.buildAttr(unit.element, "href", report?.url, unit.description)
+      image: this.buildAttr(unit.element, "src", report?.image, unit.image),
+      url: this.buildAttr(unit.element, "href", report?.url, unit.url)
     }));
   }
 

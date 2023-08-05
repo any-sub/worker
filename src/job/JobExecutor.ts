@@ -10,11 +10,12 @@ export abstract class JobExecutor {
 
   protected abstract executeInternal(work: Work): Promise<ResultReport[]>;
 
-  protected wrapState(result: ResultReport[]): State {
+  protected wrapState(work: Work, result: ResultReport[]): State {
+    const baseURL = work.source.location;
     return {
       lastUpdated: new Date(),
       data: result
-        .map((unit) => this.sanitiser.sanitise(unit))
+        .map((unit) => this.sanitiser.sanitise(unit, baseURL))
         .map((unit) => ({
           ...unit,
           hash: this.hasher.hash(unit)
@@ -24,6 +25,6 @@ export abstract class JobExecutor {
 
   public async execute(work: Work): Promise<State> {
     const result = await this.executeInternal(work);
-    return this.wrapState(result);
+    return this.wrapState(work, result);
   }
 }

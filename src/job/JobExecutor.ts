@@ -13,7 +13,8 @@ export abstract class JobExecutor {
   protected wrapState(work: Work, result: ResultReport[]): State {
     const baseURL = work.source.location;
     return {
-      lastUpdated: new Date(),
+      id: work.id,
+      lastUpdated: new Date().toISOString(),
       data: result
         .map((unit) => this.sanitiser.sanitise(unit, baseURL))
         .map((unit) => ({

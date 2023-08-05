@@ -8,6 +8,8 @@ import { HtmlJobExecutor } from "../../../job/HtmlJobExecutor";
 import { Chance } from "chance";
 import * as fs from "fs";
 import * as path from "path";
+import { ResultReportUnitSanitiser } from "../../../util/ResultReportUnitSanitiser";
+import { ResultReportHasher } from "../../../util/ResultReportHasher";
 
 const chance = new Chance();
 
@@ -16,16 +18,21 @@ const readHtmlSource = (name: string): string => {
 };
 
 describe("HtmlJobExecutor integration", () => {
+  let executor: HtmlJobExecutor;
   const server = new MockServer();
   beforeAll(() => server.start());
   afterAll(() => server.stop());
-  beforeEach(() => server.reset());
+  beforeEach(() => {
+    server.reset();
+    const reader = new HtmlReader(new HttpFetch());
+    const consumer = new HtmlConsumer(new HtmlReporter());
+    executor = new HtmlJobExecutor(reader, consumer);
+    executor.sanitiser = new ResultReportUnitSanitiser();
+    executor.hasher = new ResultReportHasher();
+  });
 
   it("should report with default reporting", async () => {
     // Given
-    const reader = new HtmlReader(new HttpFetch());
-    const consumer = new HtmlConsumer(new HtmlReporter());
-    const executor = new HtmlJobExecutor(reader, consumer);
     server.get("/").mockImplementation((ctx) => {
       ctx.status = 200;
       ctx.headers["content-type"] = "text/html";

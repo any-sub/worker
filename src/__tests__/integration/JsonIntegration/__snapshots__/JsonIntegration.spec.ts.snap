@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JsonJobExecutor integration should report with complex reporting 1`] = `
+[
+  {
+    "description": "foo Desc1",
+    "hash": "1d4c68db06077149844f3b81dbd3cd37",
+    "image": "http://someurl/14533.png",
+    "title": "Title1",
+    "url": "http://someurl/14533",
+  },
+  {
+    "description": "bar Desc2",
+    "hash": "ce5b1cf2b056d5537603c3e65bf839a7",
+    "image": "http://someurl/22554.png",
+    "title": "Title2",
+    "url": "http://someurl/22554",
+  },
+]
+`;

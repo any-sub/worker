@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@tsed/di";
-import { Work } from "@any-sub/worker-transport";
+import { State, Work } from "@any-sub/worker-transport";
 import { JobExecutorFactory } from "../job/JobExecutorFactory";
 import { Logger } from "@tsed/logger";
 
@@ -9,7 +9,7 @@ export class SocketHandler {
 
   constructor(private readonly jobExecutorFactory: JobExecutorFactory) {}
 
-  public async work(work: Work) {
+  public async work(work: Work): Promise<State> {
     this.logger.info(`Starting job ${work.id}`);
     const executor = this.jobExecutorFactory.create(work.source);
     const result = await executor.execute(work);

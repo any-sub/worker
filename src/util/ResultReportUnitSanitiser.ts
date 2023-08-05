@@ -15,8 +15,12 @@ export class ResultReportUnitSanitiser {
   private sanitiseField(fieldName: keyof ResultReport, fieldValue?: string): ResultReport | undefined {
     return fieldValue
       ? {
-          [fieldName]: fieldValue.trim()
+          [fieldName]: this.sanitiseValue(fieldValue)
         }
       : undefined;
+  }
+
+  private sanitiseValue(value: string) {
+    return value.trim().substring(0, 255);
   }
 }

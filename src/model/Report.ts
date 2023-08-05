@@ -3,4 +3,4 @@ export type ResultReport = {
   url?: string;
   image?: string;
   description?: string;
-}
+};

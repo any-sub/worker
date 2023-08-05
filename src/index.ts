@@ -1,5 +1,6 @@
-import { InjectorService } from "@tsed/di";
+import { attachLogger, InjectorService } from "@tsed/di";
 import { ConnectionManager } from "./socket/ConnectionManager";
+import { initLogging } from "./config/logger";
 
 setInterval(() => {
   console.debug("Keep alive");
@@ -7,6 +8,7 @@ setInterval(() => {
 
 (async function bootstrap() {
   const injector = new InjectorService();
+  attachLogger(injector, initLogging());
   await injector.load();
   const manager = injector.invoke<ConnectionManager>(ConnectionManager);
   await manager.connect();

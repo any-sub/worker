@@ -15,10 +15,10 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@any-sub/worker-transport@0.0.14":
-  version "0.0.14"
-  resolved "https://europe-west1-npm.pkg.dev/personalweb-279207/any-sub/@any-sub/worker-transport/-/@any-sub/worker-transport-0.0.14.tgz#fcd066a2e03e1a22b24fb3aec6947c5df235481c"
-  integrity sha512-zbUoC2gsz95hVk2GKqFh1tb7xNxcXck3JpIbzenF9LD2ZPE5kCBT1zSAZyUNjOSu3yG1U9wBwliQrqrUp2do0g==
+"@any-sub/worker-transport@0.0.15":
+  version "0.0.15"
+  resolved "https://europe-west1-npm.pkg.dev/personalweb-279207/any-sub/@any-sub/worker-transport/-/@any-sub/worker-transport-0.0.15.tgz#e8d236fa94ebeec7e7895e358c7d064ac4064324"
+  integrity sha512-lC/y1ZkFeExz9hPPGyULQJfz4sx/vP6EA3E/wzFbsmQ5IxbmlM4KoAB5eULHcwN2qpyXRe1/1MkUW4iEfdLdQw==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.18.6", "@babel/code-frame@^7.21.4":
   version "7.21.4"
@@ -1182,6 +1182,11 @@
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
+
+"@types/string-hash@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@types/string-hash/-/string-hash-1.1.1.tgz#4c336e61d1e13ce2d3efaaa5910005fd080e106b"
+  integrity sha512-ijt3zdHi2DmZxQpQTmozXszzDo78V4R3EdvX0jFMfnMH2ZzQSmCbaWOMPGXFUYSzSIdStv78HDjg32m5dxc+tA==
 
 "@types/strip-bom@^3.0.0":
   version "3.0.0"
@@ -4475,6 +4480,11 @@ streamroller@^3.1.5:
     date-format "^4.0.14"
     debug "^4.3.4"
     fs-extra "^8.1.0"
+
+string-hash@1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/string-hash/-/string-hash-1.1.3.tgz#e8aafc0ac1855b4666929ed7dd1275df5d6c811b"
+  integrity sha512-kJUvRUFK49aub+a7T1nNE66EJbZBMnBgoC1UbCZ5n6bsZKBRga4KgBRTMn/pFkeCZSYtNeSyMxPDM0AXWELk2A==
 
 string-length@^4.0.1:
   version "4.0.2"

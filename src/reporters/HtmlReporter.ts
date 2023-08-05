@@ -7,9 +7,6 @@ import { HtmlElementPropertyReader } from "../consumers";
 
 @Injectable()
 export class HtmlReporter extends Reporter<Element> {
-  // constructor(private readonly propertyReader: HtmlElementPropertyReader) {
-  //   super();
-  // }
   private readonly propertyReader = new HtmlElementPropertyReader();
 
   public buildReport(content: ReportUnit[], report?: Nullable<Report>): ResultReport[] {
@@ -38,6 +35,7 @@ export class HtmlReporter extends Reporter<Element> {
   private buildDefault(content: ReportUnit[]): ResultReport[] {
     return content
       .map((el) => el.description?.textContent ?? el.element.textContent)
+      .map((text) => text?.trim())
       .filter(isPresent)
       .map((description) => ({ description }));
   }

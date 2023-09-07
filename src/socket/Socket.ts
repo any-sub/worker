@@ -3,7 +3,8 @@ import { io, Socket } from "socket.io-client";
 import { Logger } from "@tsed/logger";
 import { SOCKET_URI } from "../config";
 import { SocketHandler } from "./SocketHandler";
-import { WorkParser } from "@any-sub/worker-transport";
+import { State, WorkError, WorkParser } from "@any-sub/worker-transport";
+import { WorkerError } from "../base/Error";
 
 @Injectable()
 export class SocketClient {
@@ -14,7 +15,7 @@ export class SocketClient {
 
   private socket: Socket;
 
-  public connect(callback: (err?: any) => void) {
+  public connect(callback: (err?: unknown) => void) {
     if (!this.socket) {
       this.socket = io(SOCKET_URI);
     } else {
@@ -36,16 +37,33 @@ export class SocketClient {
       callback(err);
     });
 
-    this.socket.on("work", async (work) => {
+    this.socket.on("work", async (workString) => {
       try {
-        const result = await this.handler.work(WorkParser.parse(work));
-        this.socket.emit("result", JSON.stringify(result));
+        const work = WorkParser.parse(workString);
+        try {
+          this.sendResult(await this.handler.work(work));
+        } catch (err) {
+          this.sendError(err, work.id);
+        }
       } catch (err) {
-        this.logger.error(err);
-        this.socket.emit("error", err.message);
+        this.sendError(err);
       }
     });
 
     this.socket.connect();
+  }
+
+  private sendResult(resultState: State) {
+    this.socket.emit("result", JSON.stringify(resultState));
+  }
+
+  private sendError(err: Error, workId?: string) {
+    const error: WorkError = {
+      id: workId,
+      code: err instanceof WorkerError ? err.code : WorkerError.INTERNAL,
+      message: err.message
+    };
+    this.logger.error(err);
+    this.socket.emit("error", JSON.stringify(error));
   }
 }

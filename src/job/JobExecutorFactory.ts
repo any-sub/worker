@@ -3,6 +3,7 @@ import { JsonJobExecutor } from "./JsonJobExecutor";
 import { HtmlJobExecutor } from "./HtmlJobExecutor";
 import { JobExecutor } from "./JobExecutor";
 import { Source } from "@any-sub/worker-transport";
+import { UnhandledSourceTypeError } from "../base/Error";
 
 @Injectable({
   type: ProviderType.FACTORY
@@ -20,9 +21,7 @@ export class JobExecutorFactory {
       case "html":
         return this.html;
       default:
-        throw new UnhandledSourceTypeException();
+        throw new UnhandledSourceTypeError();
     }
   }
 }
-
-export class UnhandledSourceTypeException extends Error {}

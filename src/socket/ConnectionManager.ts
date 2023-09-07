@@ -2,11 +2,15 @@ import { Injectable, ProviderScope, Scope } from "@tsed/di";
 import { Logger } from "@tsed/logger";
 import { SocketClient } from "./Socket";
 import { delay } from "../base";
+import { MaxRetryReachedError } from "../base/Error";
 
 @Injectable()
 @Scope(ProviderScope.SINGLETON)
 export class ConnectionManager {
-  constructor(private readonly logger: Logger, private readonly client: SocketClient) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly client: SocketClient
+  ) {}
 
   private static RETRY_WAIT = 1000 * 2;
   private static MAX_RETRIES = 30;
@@ -38,5 +42,3 @@ export class ConnectionManager {
     }
   }
 }
-
-export class MaxRetryReachedError extends Error {}

@@ -1,5 +1,6 @@
 import { Response } from "node-fetch";
 import { HttpFetch } from "../base";
+import { ContentTypeMismatchError, ResultNotOkError } from "../base/Error";
 
 export abstract class HttpReader<T extends HttpSource> {
   public abstract read(url: string | URL): Promise<T>;
@@ -16,13 +17,13 @@ export abstract class HttpReader<T extends HttpSource> {
     });
 
     if (!this.getAcceptedContentTypes().find((type) => res.headers.get("content-type")?.startsWith(type))) {
-      throw new Error("Content type returned does not match");
+      throw new ContentTypeMismatchError();
     }
 
     const contents = await res.text();
 
     if (!res.ok) {
-      throw new Error(contents);
+      throw new ResultNotOkError(contents);
     }
 
     return [contents, res];

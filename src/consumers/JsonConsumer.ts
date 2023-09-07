@@ -6,6 +6,7 @@ import jp from "jsonpath";
 import { isPresent } from "../util/TypeUtils";
 import { JsonReporter } from "../reporters/JsonReporter";
 import { Injectable } from "@tsed/di";
+import { ElementNotFoundError } from "../base/Error";
 
 @Injectable()
 export class JsonConsumer extends Consumer<JsonSource> {
@@ -19,7 +20,7 @@ export class JsonConsumer extends Consumer<JsonSource> {
     const elements = this.lookup(source, consume.lookup ?? JsonConsumer.ROOT_LOOKUP).filter(isPresent);
 
     if (!elements || !elements.length) {
-      throw new Error("No elements found.");
+      throw new ElementNotFoundError();
     }
 
     return this.buildReporting(elements, consume.parts, report);

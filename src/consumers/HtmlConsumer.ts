@@ -5,6 +5,7 @@ import { JSDOM } from "jsdom";
 import { ConsumeReportParts, LookupMode, LookupSettings, Report, Work } from "@any-sub/worker-transport";
 import { HtmlReporter } from "../reporters/HtmlReporter";
 import { ResultReport } from "../model/Report";
+import { ElementNotFoundError } from "../base/Error";
 
 @Injectable()
 export class HtmlConsumer extends Consumer<HtmlSource> {
@@ -19,7 +20,7 @@ export class HtmlConsumer extends Consumer<HtmlSource> {
     const elements = consume.lookup ? this.getElements(dom, consume.lookup) : this.getElements(dom, HtmlConsumer.BODY_LOOKUP);
 
     if (!elements || !elements.length) {
-      throw new Error("No element found.");
+      throw new ElementNotFoundError();
     }
 
     return this.buildReporting(elements, consume.parts, report);

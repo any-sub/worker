@@ -4,7 +4,7 @@
   "main": "src/index.js",
   "license": "MIT",
   "dependencies": {
-    "@any-sub/worker-transport": "0.0.16",
+    "@any-sub/worker-transport": "0.0.17",
     "@tsed/core": "7.35.0",
     "@tsed/di": "7.35.0",
     "@tsed/logger": "6.6.2",

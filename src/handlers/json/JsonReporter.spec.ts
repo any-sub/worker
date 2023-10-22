@@ -118,10 +118,7 @@ describe("JsonReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: templateMessage,
-        description: "",
-        image: "",
-        url: ""
+        title: templateMessage
       });
     });
 
@@ -148,10 +145,7 @@ describe("JsonReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: fooContent,
-        description: "",
-        image: "",
-        url: ""
+        title: fooContent
       });
     });
 
@@ -180,10 +174,7 @@ describe("JsonReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: `${fooContent} {"content":"${content}","foo":"${fooContent}"}`,
-        description: "",
-        image: "",
-        url: ""
+        title: `${fooContent} {"content":"${content}","foo":"${fooContent}"}`
       });
     });
 
@@ -202,10 +193,7 @@ describe("JsonReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: `{"content":"${content}"}`,
-        description: "",
-        image: "",
-        url: ""
+        title: `{"content":"${content}"}`
       });
     });
   });

@@ -1,6 +1,5 @@
 import { Chance } from "chance";
 import { HtmlReporter } from "./HtmlReporter";
-import { HtmlElementPropertyReader } from "../consumers";
 
 const chance = new Chance();
 
@@ -78,10 +77,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: templateMessage,
-        description: "",
-        image: "",
-        url: ""
+        title: templateMessage
       });
     });
 
@@ -108,10 +104,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: fooContent,
-        description: "",
-        image: "",
-        url: ""
+        title: fooContent
       });
     });
 
@@ -140,10 +133,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: `${fooContent} ${content}`,
-        description: "",
-        image: "",
-        url: ""
+        title: `${fooContent} ${content}`
       });
     });
 
@@ -162,10 +152,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: content,
-        description: "",
-        image: "",
-        url: ""
+        title: content
       });
     });
   });
@@ -183,10 +170,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: templateMessage,
-        image: "",
-        url: ""
+        description: templateMessage
       });
     });
 
@@ -213,10 +197,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: fooContent,
-        image: "",
-        url: ""
+        description: fooContent
       });
     });
 
@@ -245,10 +226,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: `${fooContent} ${content}`,
-        image: "",
-        url: ""
+        description: `${fooContent} ${content}`
       });
     });
 
@@ -267,10 +245,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: content,
-        image: "",
-        url: ""
+        description: content
       });
     });
   });
@@ -288,10 +263,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: "",
-        image: templateUrl,
-        url: ""
+        image: templateUrl
       });
     });
 
@@ -306,10 +278,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: "",
-        image: url,
-        url: ""
+        image: url
       });
     });
 
@@ -328,10 +297,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: "",
-        image: "https://someurl/123",
-        url: ""
+        image: "https://someurl/123"
       });
     });
 
@@ -351,10 +317,7 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: "",
-        image: url,
-        url: ""
+        image: url
       });
     });
   });
@@ -372,9 +335,6 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: "",
-        image: "",
         url: templateUrl
       });
     });
@@ -390,9 +350,6 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: "",
-        image: "",
         url: url
       });
     });
@@ -412,9 +369,6 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: "",
-        image: "",
         url: "https://someurl/123"
       });
     });
@@ -435,9 +389,6 @@ describe("HtmlReporter", () => {
       // Then
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({
-        title: "",
-        description: "",
-        image: "",
         url: url
       });
     });

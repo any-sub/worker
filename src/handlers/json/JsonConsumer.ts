@@ -1,12 +1,12 @@
-import { Consumer } from "./Consumer";
-import { JsonSource } from "../readers";
+import { Consumer } from "../../consumers";
+import { JsonSource } from "../../readers";
 import { ConsumeReportParts, LookupMode, LookupSettings, Report, Work } from "@any-sub/worker-transport";
-import { ResultReport } from "../model/Report";
+import { ResultReport } from "../../model/Report";
 import jp from "jsonpath";
-import { isPresent } from "../util/TypeUtils";
-import { JsonReporter } from "../reporters/JsonReporter";
+import { isPresent } from "../../util/TypeUtils";
+import { JsonReporter } from "./JsonReporter";
 import { Injectable } from "@tsed/di";
-import { ElementNotFoundError } from "../base/Error";
+import { ElementNotFoundError } from "../../base";
 
 @Injectable()
 export class JsonConsumer extends Consumer<JsonSource> {

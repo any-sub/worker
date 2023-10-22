@@ -1,10 +1,7 @@
-import { HtmlReader } from "../../../readers";
-import { HtmlConsumer } from "../../../consumers";
 import { expect } from "@jest/globals";
-import { HtmlReporter } from "../../../reporters/HtmlReporter";
+import { HtmlConsumer, HtmlJobExecutor, HtmlReader, HtmlReporter } from "../../../handlers/html";
 import { MockServer } from "jest-mock-server";
 import { HttpFetch } from "../../../base";
-import { HtmlJobExecutor } from "../../../job/HtmlJobExecutor";
 import { Chance } from "chance";
 import * as fs from "fs";
 import * as path from "path";

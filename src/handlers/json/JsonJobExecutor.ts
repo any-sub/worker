@@ -1,9 +1,9 @@
-import { JobExecutor } from "./JobExecutor";
+import { JobExecutor } from "../../job/JobExecutor";
 import { Work } from "@any-sub/worker-transport";
-import { ResultReport } from "../model/Report";
-import { JsonReader } from "../readers";
-import { JsonConsumer } from "../consumers/JsonConsumer";
+import { ResultReport } from "../../model/Report";
+import { JsonConsumer } from "./JsonConsumer";
 import { Injectable } from "@tsed/di";
+import { JsonReader } from "./JsonReader";
 
 @Injectable()
 export class JsonJobExecutor extends JobExecutor {

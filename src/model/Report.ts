@@ -1,6 +1,6 @@
 export type ResultReport = {
-  title?: string;
-  url?: string;
-  image?: string;
-  description?: string;
+  title?: Nullable<string>;
+  url?: Nullable<string>;
+  image?: Nullable<string>;
+  description?: Nullable<string>;
 };

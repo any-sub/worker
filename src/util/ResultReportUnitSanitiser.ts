@@ -12,7 +12,7 @@ export class ResultReportUnitSanitiser {
     };
   }
 
-  private sanitiseField(fieldName: keyof ResultReport, maxLength: number, fieldValue?: string): ResultReport | undefined {
+  private sanitiseField(fieldName: keyof ResultReport, maxLength: number, fieldValue?: Nullable<string>): ResultReport | undefined {
     return fieldValue
       ? {
           [fieldName]: this.sanitiseValue(fieldValue).substring(0, maxLength)
@@ -31,7 +31,7 @@ export class ResultReportUnitSanitiser {
     return url.href;
   }
 
-  private sanitiseURL(baseURL: string, fieldName: keyof ResultReport, fieldValue?: string): ResultReport | undefined {
+  private sanitiseURL(baseURL: string, fieldName: keyof ResultReport, fieldValue?: Nullable<string>): ResultReport | undefined {
     return fieldValue
       ? {
           [fieldName]: this.makeURL(baseURL, this.sanitiseValue(fieldValue)).substring(0, 2048)

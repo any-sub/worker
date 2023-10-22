@@ -1,12 +1,9 @@
-import { JsonReader } from "../../../readers";
 import { expect } from "@jest/globals";
 import { MockServer } from "jest-mock-server";
 import { HttpFetch } from "../../../base";
 import * as fs from "fs";
 import * as path from "path";
-import { JsonConsumer } from "../../../consumers";
-import { JsonReporter } from "../../../reporters/JsonReporter";
-import { JsonJobExecutor } from "../../../job/JsonJobExecutor";
+import { JsonConsumer, JsonJobExecutor, JsonReader, JsonReporter } from "../../../handlers/json";
 import { ResultReportUnitSanitiser } from "../../../util/ResultReportUnitSanitiser";
 import { ResultReportHasher } from "../../../util/ResultReportHasher";
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@tsed/di";
-import { HttpFetch } from "../base";
-import { HttpReader, JsonSource } from "./HttpReader";
+import { HttpFetch } from "../../base";
+import { HttpReader, JsonSource } from "../../readers";
 
 @Injectable()
 export class JsonReader extends HttpReader<JsonSource> {

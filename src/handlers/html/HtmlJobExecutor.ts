@@ -1,13 +1,16 @@
-import { JobExecutor } from "./JobExecutor";
+import { JobExecutor } from "../../job/JobExecutor";
 import { Work } from "@any-sub/worker-transport";
-import { ResultReport } from "../model/Report";
-import { HtmlReader } from "../readers";
-import { HtmlConsumer } from "../consumers";
+import { ResultReport } from "../../model/Report";
+import { HtmlConsumer } from "./HtmlConsumer";
 import { Injectable } from "@tsed/di";
+import { HtmlReader } from "./HtmlReader";
 
 @Injectable()
 export class HtmlJobExecutor extends JobExecutor {
-  constructor(private readonly reader: HtmlReader, private readonly consumer: HtmlConsumer) {
+  constructor(
+    private readonly reader: HtmlReader,
+    private readonly consumer: HtmlConsumer
+  ) {
     super();
   }
 

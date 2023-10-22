@@ -42,14 +42,4 @@ export class ResultReportUnitSanitiser {
   private sanitiseValue(value: string) {
     return value.trim();
   }
-
-  public excludeNulls(unit: ResultReport): ResultReport {
-    const report: ResultReport = {};
-    Object.entries(unit).forEach(([key, value]) => {
-      if (value) {
-        report[key as keyof ResultReport] = value;
-      }
-    });
-    return report;
-  }
 }

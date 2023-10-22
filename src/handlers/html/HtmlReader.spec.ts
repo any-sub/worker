@@ -1,6 +1,7 @@
 import { expect } from "@jest/globals";
 import { HtmlReader } from "./HtmlReader";
 import { mockedHttpFetch } from "../../__tests__/utils/Mocks";
+import { ResultNotOkError } from "../../base";
 
 describe("HtmlReader", () => {
   it("should create an instance", async () => {
@@ -45,7 +46,7 @@ describe("HtmlReader", () => {
     const instance = new HtmlReader(mockedHttpFetch(expectedHtml, 404));
 
     // When - Then
-    await expect(instance.read("https://local.host")).rejects.toThrow(new Error(expectedHtml));
+    await expect(instance.read("https://local.host")).rejects.toThrow(new ResultNotOkError(expectedHtml));
   });
 
   it("should throw if returned content type is not html", async () => {

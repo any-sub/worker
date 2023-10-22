@@ -1,6 +1,7 @@
 import { expect } from "@jest/globals";
 import { JsonReader } from "./JsonReader";
 import { mockedHttpFetch } from "../../__tests__/utils/Mocks";
+import { ResultNotOkError } from "../../base";
 
 const mockedJsonHttpFetch = (content = "{}", status = 200) => {
   return mockedHttpFetch(content, status, "application/json");
@@ -61,7 +62,7 @@ describe("JsonReader", () => {
     const instance = new JsonReader(mockedJsonHttpFetch(expectedJSON, 404));
 
     // When - Then
-    await expect(instance.read("https://local.host")).rejects.toThrow(new Error(expectedJSON));
+    await expect(instance.read("https://local.host")).rejects.toThrow(new ResultNotOkError(expectedJSON));
   });
 
   it("should throw if returned content type is not json", async () => {

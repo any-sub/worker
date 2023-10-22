@@ -20,6 +20,11 @@ describe("Reader -> Consumer integration", () => {
       id: "",
       consume: {
         lookup: { mode: LookupMode.enum.css, value: "#container" }
+      },
+      report: {
+        description: {
+          template: "{{textContent}}"
+        }
       }
     });
 

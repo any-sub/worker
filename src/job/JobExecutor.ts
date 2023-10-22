@@ -17,7 +17,6 @@ export abstract class JobExecutor {
       lastUpdated: new Date().toISOString(),
       data: result
         .map((unit) => this.sanitiser.sanitise(unit, baseURL))
-        .map((unit) => this.sanitiser.excludeNulls(unit))
         .map((unit) => ({
           ...unit,
           hash: this.hasher.hash(unit)

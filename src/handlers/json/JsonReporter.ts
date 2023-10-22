@@ -1,12 +1,12 @@
 import { Injectable } from "@tsed/di";
 import { AbstractReportUnit, PartReporter, Reporter } from "../../reporters/Reporter";
-import { Report, TextReporting } from "@any-sub/worker-transport";
+import { Report } from "@any-sub/worker-transport";
 import { JsonSource } from "../../readers";
 
 @Injectable()
 export class JsonReporter extends Reporter<JsonSource> {
   getDefaultReporter(): PartReporter<JsonSource> {
-    return new TextReporter("title");
+    return new DefaultReporter();
   }
 
   getTitleReporter(): PartReporter<JsonSource> {
@@ -37,21 +37,26 @@ class TextReporter extends PartReporter<JsonSource> {
   }
 
   public build(element?: JsonSource, report?: Report, reportingElement?: JsonSource) {
-    if (!element) return null;
-    return this.buildText(element ?? reportingElement, report?.[this.part]);
+    const el = element ?? reportingElement;
+    if (!el) return null;
+
+    const options = report?.[this.part];
+    const stringValue = this.stringify(el);
+    const groups = (options?.match && stringValue?.match(options.match)?.groups) || {};
+    return this.reportText(options?.template ?? "", { ...{ $: el, $__string: stringValue }, ...groups });
   }
 
   private stringify(source: JsonSource): string {
     return typeof source === "string" ? source : JSON.stringify(source);
   }
+}
 
-  private buildText(element: JsonSource, report?: Nullable<TextReporting>, reportingElement?: JsonSource) {
-    return this.reportTextElement(reportingElement ?? element, report);
+class DefaultReporter extends TextReporter {
+  constructor() {
+    super("description");
   }
 
-  private reportTextElement(element: JsonSource, options?: Nullable<TextReporting>) {
-    const stringValue = this.stringify(element);
-    const groups = (options?.match && stringValue?.match(options.match)?.groups) || {};
-    return element ? this.reportText(options?.template ?? "", { ...{ $: element }, ...groups }) : "";
+  public build(element?: JsonSource, report?: Report, reportingElement?: JsonSource) {
+    return super.build(element, { description: { template: "{{$__string}}" } }, reportingElement);
   }
 }

@@ -1074,10 +1074,10 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
   integrity sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==
 
-"@types/jsonpath@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@types/jsonpath/-/jsonpath-0.2.0.tgz#13c62db22a34d9c411364fac79fd374d63445aa1"
-  integrity sha512-v7qlPA0VpKUlEdhghbDqRoKMxFB3h3Ch688TApBJ6v+XLDdvWCGLJIYiPKGZnS6MAOie+IorCfNYVHOPIHSWwQ==
+"@types/jsonpath@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@types/jsonpath/-/jsonpath-0.2.2.tgz#b8b98ad2f0d912d343ff27d91bc406ccf90028b2"
+  integrity sha512-uo4BNABD0IVcJQjOmOq/atfxHVTniFaQEHrrGSANpWyS96ecej/85YXLvLWNe+tLshUz9/IbMbzImbKNo71WxA==
 
 "@types/keygrip@*":
   version "1.0.2"

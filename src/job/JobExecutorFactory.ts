@@ -1,9 +1,9 @@
 import { Injectable, ProviderType } from "@tsed/di";
-import { JsonJobExecutor } from "./JsonJobExecutor";
-import { HtmlJobExecutor } from "./HtmlJobExecutor";
+import { JsonJobExecutor } from "../handlers/json";
+import { HtmlJobExecutor } from "../handlers/html";
 import { JobExecutor } from "./JobExecutor";
 import { Source } from "@any-sub/worker-transport";
-import { UnhandledSourceTypeError } from "../base/Error";
+import { UnhandledSourceTypeError } from "../base";
 
 @Injectable({
   type: ProviderType.FACTORY

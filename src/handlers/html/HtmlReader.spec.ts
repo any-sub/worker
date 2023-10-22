@@ -1,6 +1,6 @@
 import { expect } from "@jest/globals";
 import { HtmlReader } from "./HtmlReader";
-import { mockedHttpFetch } from "../__tests__/utils/Mocks";
+import { mockedHttpFetch } from "../../__tests__/utils/Mocks";
 
 describe("HtmlReader", () => {
   it("should create an instance", async () => {

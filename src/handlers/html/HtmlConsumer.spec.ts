@@ -3,6 +3,7 @@ import { HtmlConsumer } from "./HtmlConsumer";
 import { Chance } from "chance";
 import { LookupMode, Work } from "@any-sub/worker-transport";
 import { z } from "zod";
+import { ElementNotFoundError } from "../../base";
 
 const chance = new Chance();
 type LookupMode = z.infer<typeof LookupMode>;
@@ -38,7 +39,7 @@ describe("HTMLConsumer", () => {
     const instance = new HtmlConsumer(mockHtmlReporter);
 
     // When - Then
-    expect(() => instance.consume(chance.string(), work())).toThrow("No element found.");
+    expect(() => instance.consume(chance.string(), work())).toThrow(ElementNotFoundError);
   });
 
   it("should throw when using XPATH selector", async () => {

@@ -1,6 +1,5 @@
 import { Chance } from "chance";
 import { HtmlReporter } from "./HtmlReporter";
-import { HtmlElementPropertyReader } from "../consumers";
 
 const chance = new Chance();
 

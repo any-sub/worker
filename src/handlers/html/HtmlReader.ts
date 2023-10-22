@@ -1,6 +1,6 @@
 import { Injectable } from "@tsed/di";
-import { HttpFetch } from "../base";
-import { HtmlSource, HttpReader } from "./HttpReader";
+import { HttpFetch } from "../../base";
+import { HtmlSource, HttpReader } from "../../readers";
 
 @Injectable()
 export class HtmlReader extends HttpReader<HtmlSource> {

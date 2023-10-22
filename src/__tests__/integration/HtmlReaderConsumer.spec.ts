@@ -1,8 +1,6 @@
-import { HtmlReader } from "../../readers";
-import { HtmlConsumer } from "../../consumers";
 import { expect } from "@jest/globals";
 import { LookupMode } from "@any-sub/worker-transport";
-import { HtmlReporter } from "../../reporters/HtmlReporter";
+import { HtmlConsumer, HtmlReader, HtmlReporter } from "../../handlers/html";
 import { mockedHttpFetch } from "../utils/Mocks";
 
 describe("Reader -> Consumer integration", () => {

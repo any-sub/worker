@@ -1,11 +1,11 @@
-import { Consumer } from "./Consumer";
-import { HtmlSource } from "../readers";
+import { Consumer } from "../../consumers";
+import { HtmlSource } from "../../readers";
 import { Injectable } from "@tsed/di";
 import { JSDOM } from "jsdom";
 import { ConsumeReportParts, LookupMode, LookupSettings, Report, Work } from "@any-sub/worker-transport";
-import { HtmlReporter } from "../reporters/HtmlReporter";
-import { ResultReport } from "../model/Report";
-import { ElementNotFoundError } from "../base/Error";
+import { HtmlReporter } from "./HtmlReporter";
+import { ResultReport } from "../../model/Report";
+import { ElementNotFoundError } from "../../base";
 
 @Injectable()
 export class HtmlConsumer extends Consumer<HtmlSource> {

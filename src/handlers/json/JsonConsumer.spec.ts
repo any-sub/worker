@@ -3,6 +3,7 @@ import { JsonConsumer } from "./JsonConsumer";
 import { expect } from "@jest/globals";
 import { LookupMode, Work } from "@any-sub/worker-transport";
 import { z } from "zod";
+import { ElementNotFoundError } from "../../base";
 
 const chance = new Chance();
 type LookupMode = z.infer<typeof LookupMode>;
@@ -92,7 +93,7 @@ describe("JsonConsumer", () => {
     const instance = new JsonConsumer(mockJsonReporter);
 
     // When - Then
-    expect(() => instance.consume([{ notAContainer: { title: "foo" } }], work("$..container"))).toThrow("No elements found.");
+    expect(() => instance.consume([{ notAContainer: { title: "foo" } }], work("$..container"))).toThrow(ElementNotFoundError);
   });
 
   it("should consume an object source", () => {
@@ -134,7 +135,7 @@ describe("JsonConsumer", () => {
     const instance = new JsonConsumer(mockJsonReporter);
 
     // When - Then
-    expect(() => instance.consume({ notAContainer: { title: "foo" } }, work("$..container"))).toThrow("No elements found.");
+    expect(() => instance.consume({ notAContainer: { title: "foo" } }, work("$..container"))).toThrow(ElementNotFoundError);
   });
 
   it("should use source when container not specified for an array source", () => {

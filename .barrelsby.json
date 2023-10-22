@@ -2,7 +2,9 @@
   "directory": [
     "./src/base",
     "./src/consumers",
-    "./src/readers"
+    "./src/readers",
+    "./src/handlers/html",
+    "./src/handlers/json"
   ],
   "exclude": [
     "__mock__",

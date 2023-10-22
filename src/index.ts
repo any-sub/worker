@@ -12,4 +12,7 @@ setInterval(() => {
   await injector.load();
   const manager = injector.invoke<ConnectionManager>(ConnectionManager);
   await manager.connect();
-})().catch(console.error);
+})().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

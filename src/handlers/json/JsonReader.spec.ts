@@ -1,6 +1,6 @@
 import { expect } from "@jest/globals";
 import { JsonReader } from "./JsonReader";
-import { mockedHttpFetch } from "../__tests__/utils/Mocks";
+import { mockedHttpFetch } from "../../__tests__/utils/Mocks";
 
 const mockedJsonHttpFetch = (content = "{}", status = 200) => {
   return mockedHttpFetch(content, status, "application/json");

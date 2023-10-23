@@ -1180,10 +1180,10 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
-"@types/string-hash@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@types/string-hash/-/string-hash-1.1.1.tgz#4c336e61d1e13ce2d3efaaa5910005fd080e106b"
-  integrity sha512-ijt3zdHi2DmZxQpQTmozXszzDo78V4R3EdvX0jFMfnMH2ZzQSmCbaWOMPGXFUYSzSIdStv78HDjg32m5dxc+tA==
+"@types/string-hash@1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@types/string-hash/-/string-hash-1.1.2.tgz#a75d30003a42fba4e5d3fb13ff92c62a1e988733"
+  integrity sha512-CtVwNz47vNgl2qVUnX29IkZaBr5XbscAL30cKFwU8HgbCB3cQ1OuY/COl4MrvWbJq0xfmB7mo/nZTng+bi4TDg==
 
 "@types/strip-bom@^3.0.0":
   version "3.0.0"

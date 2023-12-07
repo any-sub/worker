@@ -5,8 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "@any-sub/worker-transport": "0.0.17",
-    "@tsed/core": "7.51.2",
-    "@tsed/di": "7.51.2",
+    "@tsed/core": "7.52.0",
+    "@tsed/di": "7.52.0",
     "@tsed/logger": "6.6.3",
     "@types/node": "20.10.4",
     "dotenv": "16.3.1",
@@ -20,7 +20,7 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
-    "@tsed/common": "7.51.2",
+    "@tsed/common": "7.52.0",
     "@types/chance": "1.1.6",
     "@types/jest": "29.5.11",
     "@types/jsdom": "21.1.6",

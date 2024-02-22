@@ -8,7 +8,7 @@
     "@tsed/core": "7.61.2",
     "@tsed/di": "7.61.2",
     "@tsed/logger": "6.6.3",
-    "@types/node": "20.11.19",
+    "@types/node": "20.11.20",
     "dotenv": "16.4.5",
     "handlebars": "4.7.8",
     "jsdom": "22.1.0",

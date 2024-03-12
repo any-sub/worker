@@ -830,15 +830,15 @@
     streamroller "^3.1.5"
     tslib "2.3.1"
 
-"@tsed/logger@6.6.3":
-  version "6.6.3"
-  resolved "https://registry.yarnpkg.com/@tsed/logger/-/logger-6.6.3.tgz#9c10d3ec4f21d092a96bf51de52b475939379604"
-  integrity sha512-TwJDWQ3nnZ++A6Si/pHFdCGDoewRSDdmBpN6vwnFRXRjJrkHqITwCMGMG74ZMVBXl8KMI6ngNma2qbIuhKFUyw==
+"@tsed/logger@6.7.0":
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/@tsed/logger/-/logger-6.7.0.tgz#64b4112d62b73d43f5bde04fc091fb3c666bf49b"
+  integrity sha512-ajkyuAtbioyzBaOhIW3OlJahamZpUUq+QH9GvW3WJi9BL8bVasseaNw7gJGVNdRyn+oFBKuy/qstVvCl6o9tIQ==
   dependencies:
     colors "1.4.0"
-    date-format "^4.0.6"
-    semver "^7.3.5"
-    tslib "2.3.1"
+    date-format "^4.0.14"
+    semver "^7.6.0"
+    tslib "2.6.2"
 
 "@tsed/logger@>=6.2.2":
   version "6.5.0"
@@ -4342,6 +4342,13 @@ semver@^7.5.4:
   version "7.5.4"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
   integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
+  dependencies:
+    lru-cache "^6.0.0"
+
+semver@^7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.0.tgz#1a46a4db4bffcccd97b743b5005c8325f23d4e2d"
+  integrity sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==
   dependencies:
     lru-cache "^6.0.0"
 

@@ -7,7 +7,7 @@
     "@any-sub/worker-transport": "0.0.17",
     "@tsed/core": "7.63.0",
     "@tsed/di": "7.63.0",
-    "@tsed/logger": "6.6.3",
+    "@tsed/logger": "6.7.0",
     "@types/node": "20.11.26",
     "dotenv": "16.4.5",
     "handlebars": "4.7.8",

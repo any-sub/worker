@@ -830,10 +830,10 @@
     streamroller "^3.1.5"
     tslib "2.3.1"
 
-"@tsed/logger@6.7.0":
-  version "6.7.0"
-  resolved "https://registry.yarnpkg.com/@tsed/logger/-/logger-6.7.0.tgz#64b4112d62b73d43f5bde04fc091fb3c666bf49b"
-  integrity sha512-ajkyuAtbioyzBaOhIW3OlJahamZpUUq+QH9GvW3WJi9BL8bVasseaNw7gJGVNdRyn+oFBKuy/qstVvCl6o9tIQ==
+"@tsed/logger@6.7.2":
+  version "6.7.2"
+  resolved "https://registry.yarnpkg.com/@tsed/logger/-/logger-6.7.2.tgz#a4be868771b24465025f6a4a045d1121f982f260"
+  integrity sha512-/Z2o3b8s9vVpB0i5tsTVKgfdMKxiqWdmJle1Hzr51YBA4PWcd+wxi4VmrEm7XBLv4LnVl4SAlkfUDfp1yyi7Bg==
   dependencies:
     colors "1.4.0"
     date-format "^4.0.14"
